@@ -1,7 +1,6 @@
 package eu.inmite.android.fw.validation.pojo;
 
-import javax.validation.constrains.Max;
-import javax.validation.constrains.Min;
+import javax.validation.constraints.Max;
 import java.lang.reflect.Field;
 import java.math.BigDecimal;
 

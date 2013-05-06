@@ -1,6 +1,6 @@
 package eu.inmite.android.fw.validation.pojo;
 
-import javax.validation.constrains.Size;
+import javax.validation.constraints.Size;
 import java.lang.reflect.Field;
 
 /**

@@ -1,4 +1,4 @@
-package javax.validation.constrains;
+package javax.validation.constraints;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
  * @since 17/04/2013
  */
 @Target(value= ElementType.FIELD)
-@Retention(RetentionPolicy.RUNTIME)
-public @interface Min {
+@Retention(value= RetentionPolicy.RUNTIME)
+public @interface Max {
 	long value();
 }

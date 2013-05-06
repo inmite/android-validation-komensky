@@ -5,13 +5,12 @@ import eu.inmite.android.fw.validation.exception.PojoValidationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import javax.validation.constrains.Max;
-import javax.validation.constrains.Min;
-import javax.validation.constrains.NotNull;
-import javax.validation.constrains.Size;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.math.BigDecimal;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
 

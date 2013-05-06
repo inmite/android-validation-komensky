@@ -1,6 +1,6 @@
 package eu.inmite.android.fw.validation.pojo;
 
-import javax.validation.constrains.NotNull;
+import javax.validation.constraints.NotNull;
 import java.lang.reflect.Field;
 
 /**
