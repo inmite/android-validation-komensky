@@ -4,6 +4,8 @@ import eu.inmite.android.fw.validation.PojoValidator;
 import eu.inmite.android.fw.validation.exception.PojoValidationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.Config;
 
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
@@ -20,7 +22,8 @@ import static org.junit.Assert.*;
  * @author Tomáš Kypta
  * @since 18/04/2013
  */
-@RunWith(ValidatorTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
+@Config(manifest=Config.NONE)
 public class PojoValidatorTest {
 
 	private static class TestEntity1 {

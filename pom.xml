@@ -12,7 +12,7 @@
 	<groupId>eu.inmite.android.lib</groupId>
 	<artifactId>android-framework-validation</artifactId>
 	<version>0.9.0-SNAPSHOT</version>
-	<packaging>apklib</packaging>
+	<packaging>jar</packaging>
 
 	<name>Android Framework Validation</name>
 
@@ -34,6 +34,28 @@
 
 
 	<dependencies>
+
+		<!-- for test -->
+		<dependency>
+			<groupId>org.robolectric</groupId>
+			<artifactId>robolectric</artifactId>
+			<version>2.0-rc1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit-dep</artifactId>
+			<version>4.8.2</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.squareup</groupId>
+			<artifactId>fest-android</artifactId>
+			<version>1.0.3</version>
+			<scope>test</scope>
+		</dependency>
+
+
 
 		<dependency>
 			<groupId>com.google.android</groupId>
@@ -60,27 +82,6 @@
 			<artifactId>actionbarsherlock</artifactId>
 			<version>4.3.0</version>
 			<type>apklib</type>
-		</dependency>
-
-
-		<!-- for test -->
-		<dependency>
-			<groupId>org.robolectric</groupId>
-			<artifactId>robolectric</artifactId>
-			<version>2.0-alpha-2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit-dep</artifactId>
-			<version>4.8.2</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.squareup</groupId>
-			<artifactId>fest-android</artifactId>
-			<version>1.0.3</version>
-			<scope>test</scope>
 		</dependency>
 
 	</dependencies>
