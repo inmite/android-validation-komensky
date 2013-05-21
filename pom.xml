@@ -30,6 +30,13 @@
 				<role>developer</role>
 			</roles>
 		</developer>
+		<developer>
+			<name>Tomáš Vondráček</name>
+			<email>tomas.vondracek@inmite.eu</email>
+			<roles>
+				<role>developer</role>
+			</roles>
+		</developer>
 	</developers>
 
 
