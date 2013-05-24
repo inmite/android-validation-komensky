@@ -63,7 +63,6 @@
 		</dependency>
 
 
-
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
@@ -71,24 +70,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>android-framework-core</artifactId>
-			<version>${project.version}</version>
-			<type>jar</type>
-		</dependency>
-
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>android-framework-main</artifactId>
-			<version>${project.version}</version>
-			<type>apklib</type>
-		</dependency>
-
-		<dependency>
-			<groupId>com.actionbarsherlock</groupId>
-			<artifactId>actionbarsherlock</artifactId>
-			<version>4.3.0</version>
-			<type>apklib</type>
+			<groupId>com.google.android</groupId>
+			<artifactId>support-v4</artifactId>
+			<version>13</version>
 		</dependency>
 
 	</dependencies>

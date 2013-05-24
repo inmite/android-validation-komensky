@@ -1,7 +1,7 @@
 package eu.inmite.android.fw.validation;
 
 import android.text.TextUtils;
-import eu.inmite.android.fw.DebugLog;
+import android.util.Log;
 
 import java.math.BigDecimal;
 import java.text.DecimalFormat;
@@ -33,7 +33,7 @@ public class Utils {
 		try {
 			amount = (BigDecimal) getBigDecimalFormatter().parse(text);
 		} catch (ParseException e) {
-			DebugLog.w("failed to parse amount with number formatter " + text, e);
+			Log.w("validation", "failed to parse amount with number formatter " + text, e);
 		}
 		return amount;
 	}
@@ -46,29 +46,11 @@ public class Utils {
 		if (amount != null) {
 			return amount;
 		} else {
+			// decimal formatter failed let's try it simple way
 			try {
-				// this will probably work only on the common locales:
-				final String numberText;
-				int commaCount = text.replaceAll("[^,]", "").length();
-				if (text.contains(".") || commaCount > 1) {
-					numberText = text.replace(",", ""); // "," comma is group separator
-				} else {
-					int commaIndex = text.lastIndexOf(",");
-					if (commaIndex >= 0) {
-						int placesBehindComma = text.length() - commaIndex - 1;
-
-						if (placesBehindComma != 3) {
-							numberText = text.replace(",", ".");    // comma is decimal separator
-						} else {
-							numberText = text.replace(",", ""); // comma is group separator (we allow only 2 decimal places)
-						}
-					} else {
-						numberText = text;
-					}
-				}
-				amount = new BigDecimal(numberText.replace(" ", ""));   // space could be group separator
+				amount = new BigDecimal(text);
 			} catch (Exception e) {
-				DebugLog.e("failed to parse amount " + text);
+				Log.w("validation", "failed to create BigDecimal from " + text, e);
 			}
 		}
 		return amount;

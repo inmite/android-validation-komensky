@@ -1,11 +1,9 @@
 package eu.inmite.android.fw.validation;
 
-import eu.inmite.android.fw.DebugLog;
 import eu.inmite.android.fw.validation.exception.PojoValidationException;
 import eu.inmite.android.fw.validation.pojo.*;
 
 import java.lang.reflect.Field;
-import java.math.BigDecimal;
 import java.util.*;
 
 /** Validate the data entity according to API specification
@@ -79,9 +77,6 @@ public class PojoValidator {
 					sb.append(',');
 				}
 				sb.append(fieldName);
-			}
-			if (isRoot) {
-				DebugLog.d("Failed validate object of class [" + entity.getClass().getSimpleName() + "], object fields in error: " + sb.toString());
 			}
 			throw new PojoValidationException(entity.getClass(), invalidFields);
 		}
