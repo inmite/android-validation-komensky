@@ -15,12 +15,12 @@ import android.content.Context;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import eu.inmite.android.fw.validation.UiValidator;
-import eu.inmite.android.fw.validation.annotations.Joined;
-import eu.inmite.android.fw.validation.annotations.MinLength;
-import eu.inmite.android.fw.validation.annotations.MinValue;
-import eu.inmite.android.fw.validation.annotations.NotEmpty;
-import eu.inmite.android.fw.validation.validators.CzechBankAccountNumberValidator;
+import eu.inmite.android.fw.validation.forms.FormsValidator;
+import eu.inmite.android.fw.validation.forms.annotations.Joined;
+import eu.inmite.android.fw.validation.forms.annotations.MinLength;
+import eu.inmite.android.fw.validation.forms.annotations.MinValue;
+import eu.inmite.android.fw.validation.forms.annotations.NotEmpty;
+import eu.inmite.android.fw.validation.forms.validators.CzechBankAccountNumberValidator;
 import junit.framework.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -78,7 +78,7 @@ public class UiValidatorTest {
 		model.txtAmount.setText("10");
 		model.editMessage.setText("0123456789");
 
-		boolean result = UiValidator.validate(Robolectric.application, model, null);
+		boolean result = FormsValidator.validate(Robolectric.application, model, null);
 		Assert.assertTrue(result);
 	}
 
@@ -88,7 +88,7 @@ public class UiValidatorTest {
 		model.txtAmount.setText("");
 		model.editMessage.setText(null);
 
-		boolean result = UiValidator.validate(Robolectric.application, model, null);
+		boolean result = FormsValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
 	}
 
@@ -98,7 +98,7 @@ public class UiValidatorTest {
 		model.txtAmount.setText("0");
 		model.editMessage.setText("0123456789");
 
-		boolean result = UiValidator.validate(Robolectric.application, model, null);
+		boolean result = FormsValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
 	}
 
@@ -108,7 +108,7 @@ public class UiValidatorTest {
 		model.txtAmount.setText("2");
 		model.editMessage.setText("00");
 
-		boolean result = UiValidator.validate(Robolectric.application, model, null);
+		boolean result = FormsValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
 	}
 
@@ -118,7 +118,7 @@ public class UiValidatorTest {
 		model.txtNumber.setText("123");
 		model.editPrefix.setText("0");
 
-		boolean result = UiValidator.validate(Robolectric.application, model, null);
+		boolean result = FormsValidator.validate(Robolectric.application, model, null);
 		Assert.assertTrue(result);
 	}
 
@@ -128,7 +128,7 @@ public class UiValidatorTest {
 		model.txtNumber.setText("1234");
 		model.editPrefix.setText("0");
 
-		boolean result = UiValidator.validate(Robolectric.application, model, null);
+		boolean result = FormsValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
 	}
 }

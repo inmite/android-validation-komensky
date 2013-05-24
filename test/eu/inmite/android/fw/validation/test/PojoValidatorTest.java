@@ -1,6 +1,6 @@
 package eu.inmite.android.fw.validation.test;
 
-import eu.inmite.android.fw.validation.PojoValidator;
+import eu.inmite.android.fw.validation.pojo.PojoValidator;
 import eu.inmite.android.fw.validation.exception.PojoValidationException;
 import org.junit.Test;
 import org.junit.runner.RunWith;
