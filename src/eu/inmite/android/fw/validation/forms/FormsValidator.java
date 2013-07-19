@@ -15,6 +15,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import eu.inmite.android.fw.validation.exception.FormsValidationException;
 import eu.inmite.android.fw.validation.forms.annotations.Condition;
 import eu.inmite.android.fw.validation.forms.iface.ICondition;
@@ -32,10 +33,11 @@ import java.util.*;
 public class FormsValidator {
 
 	public static interface IValidationCallback {
-		void validationComplete(boolean result, List<ValidationResult> failedValidations);
+		void validationComplete(boolean result, List<ValidationFail> failedValidations);
 	}
 
 	private static final WeakHashMap<Object, Map<View, FieldInfo>> sCachedFieldsByTarget = new WeakHashMap<Object, Map<View, FieldInfo>>();
+	private static Map<Object, ViewGlobalFocusChangeListener> sContinuesValidations;
 
 	/**
 	 * register custom validator
@@ -54,6 +56,42 @@ public class FormsValidator {
 		sCachedFieldsByTarget.clear();
 
 		return cleaned;
+	}
+
+	public static void startContinuousValidation(final Object target, final View formContainer, final IValidationCallback callback) {
+		if (formContainer == null) {
+			throw new IllegalArgumentException("form container view cannot be null");
+		}
+		if (target == null) {
+			throw new IllegalArgumentException("target cannot be null");
+		}
+
+		if (sContinuesValidations == null) {
+			sContinuesValidations = new HashMap<Object, ViewGlobalFocusChangeListener>();
+		} else if (sContinuesValidations.containsKey(target)) {
+			// validation is already running
+			return;
+		}
+
+		final Map<View, FieldInfo> infoMap = getFieldsForTarget(target);
+		final ViewGlobalFocusChangeListener listener = new ViewGlobalFocusChangeListener(infoMap, formContainer, target, callback);
+		formContainer.getViewTreeObserver().addOnGlobalFocusChangeListener(listener);
+		sContinuesValidations.put(target, listener);
+
+	}
+
+	public static boolean stopContinuousValidation(final Object target) {
+		if (sContinuesValidations == null || ! sContinuesValidations.containsKey(target)) {
+			return false;
+		}
+		final ViewGlobalFocusChangeListener removed = sContinuesValidations.remove(target);
+		final ViewTreeObserver treeObserver = removed.formContainer.getViewTreeObserver();
+		if (treeObserver.isAlive()) {
+			treeObserver.removeOnGlobalFocusChangeListener(removed);
+			return true;
+		}
+
+		return false;
 	}
 
 	/**
@@ -81,7 +119,6 @@ public class FormsValidator {
 	 * @return whether the validation succeeded
 	 * @throws FormsValidationException
 	 */
-	@SuppressWarnings("unchecked")
 	public synchronized static boolean validate(Context context, Object target, IValidationCallback callback) throws FormsValidationException {
 		if (context == null) {
 			throw new IllegalArgumentException("context cannot ben null");
@@ -90,65 +127,80 @@ public class FormsValidator {
 			throw new IllegalArgumentException("target cannot be null");
 		}
 
-		final List<ValidationResult> failedValidations = new ArrayList<ValidationResult>();
+		final List<ValidationFail> failedValidations = new ArrayList<ValidationFail>();
 		boolean result = true;
 
-		Map<View, FieldInfo> infoMap = sCachedFieldsByTarget.get(target);
-		if (infoMap == null) {
-			infoMap = findFieldsToValidate(target);
-			sCachedFieldsByTarget.put(target, infoMap);
-		}
+		final Map<View, FieldInfo> infoMap = getFieldsForTarget(target);
 		for (Map.Entry<View, FieldInfo> entry : infoMap.entrySet()) {
 			final FieldInfo fieldInfo = entry.getValue();
-			// first, we need to check if condition is not applied for all validations on field
-			if (fieldInfo.condition != null && fieldInfo.condition.validationAnnotation().equals(Condition.class)) {
-				// condition is applied to all validations on field
-				boolean evaluation = evaluateCondition(target, fieldInfo.condition);
-				if (! evaluation) {
-					// go to next field
-					continue;
-				}
-			}
-
 			final View view = entry.getKey();
-			// field validations
-			for (ValidationInfo valInfo : fieldInfo.validationInfoList) {
-				final Annotation annotation = valInfo.annotation;
-				if (fieldInfo.condition != null && fieldInfo.condition.validationAnnotation().equals(annotation.annotationType())) {
-					boolean evaluation = evaluateCondition(target, fieldInfo.condition);
 
-					if (! evaluation) {
-						// continue to next annotation
-						continue;
-					}
-				}
-				final IFieldAdapter adapter = FieldAdapterFactory.getAdapterForField(view, annotation);
+			ValidationFail fieldResult = performFieldValidations(context, target, fieldInfo, view);
+			if (fieldResult != null) {
+				failedValidations.add(fieldResult);
+				result = false;
+			} // else validation passed
 
-				final Object value = adapter.getFieldValue(annotation, target, view);
-				final boolean isValid = valInfo.validator.validate(annotation, value);
-				result &= isValid;
-
-				if (! isValid) {
-					final String message = valInfo.validator.getMessage(context, annotation, value);
-					final int order = valInfo.validator.getOrder(annotation);
-					failedValidations.add(new ValidationResult(view, message, order));
-
-					// no more validations on this field
-					break;
-				}
-			}
 		}
 
 		if (callback != null) {
-			Collections.sort(failedValidations, new Comparator<ValidationResult>() {
+			Collections.sort(failedValidations, new Comparator<ValidationFail>() {
 				@Override
-				public int compare(ValidationResult lhs, ValidationResult rhs) {
+				public int compare(ValidationFail lhs, ValidationFail rhs) {
 					return lhs.order < rhs.order ? -1 : (lhs.order == rhs.order ? 0 : 1);
 				}
 			});
 			callback.validationComplete(result, failedValidations);
 		}
 		return result;
+	}
+
+	@SuppressWarnings("unchecked")
+	private static ValidationFail performFieldValidations(Context context, Object target, FieldInfo fieldInfo, View view) {
+		// first, we need to check if condition is not applied for all validations on field
+		if (fieldInfo.condition != null && fieldInfo.condition.validationAnnotation().equals(Condition.class)) {
+			// condition is applied to all validations on field
+			boolean evaluation = evaluateCondition(target, fieldInfo.condition);
+			if (! evaluation) {
+				// go to next field
+				return null;
+			}
+		}
+
+		// field validations
+		for (ValidationInfo valInfo : fieldInfo.validationInfoList) {
+			final Annotation annotation = valInfo.annotation;
+			if (fieldInfo.condition != null && fieldInfo.condition.validationAnnotation().equals(annotation.annotationType())) {
+				boolean evaluation = evaluateCondition(target, fieldInfo.condition);
+
+				if (! evaluation) {
+					// continue to next annotation
+					continue;
+				}
+			}
+			final IFieldAdapter adapter = FieldAdapterFactory.getAdapterForField(view, annotation);
+
+			final Object value = adapter.getFieldValue(annotation, target, view);
+			final boolean isValid = valInfo.validator.validate(annotation, value);
+
+			if (! isValid) {
+				final String message = valInfo.validator.getMessage(context, annotation, value);
+				final int order = valInfo.validator.getOrder(annotation);
+
+				// no more validations on this field
+				return new ValidationFail(view, message, order);
+			}
+		}
+		return null;
+	}
+
+	private static Map<View, FieldInfo> getFieldsForTarget(Object target) {
+		Map<View, FieldInfo> infoMap = sCachedFieldsByTarget.get(target);
+		if (infoMap == null) {
+			infoMap = findFieldsToValidate(target);
+			sCachedFieldsByTarget.put(target, infoMap);
+		}
+		return infoMap;
 	}
 
 	/**
@@ -257,15 +309,50 @@ public class FormsValidator {
 		}
 	}
 
-	public static final class ValidationResult {
+	public static final class ValidationFail {
 		public final View view;
 		public final String message;
 		private final int order;
 
-		private ValidationResult(View view, String message, int order) {
+		private ValidationFail(View view, String message, int order) {
 			this.view = view;
 			this.message = message;
 			this.order = order;
+		}
+	}
+
+	private static class ViewGlobalFocusChangeListener implements ViewTreeObserver.OnGlobalFocusChangeListener {
+
+		private final Map<View, FieldInfo> infoMap;
+		private final View formContainer;
+		private final Object target;
+		private final IValidationCallback callback;
+
+		private View currentlyFocusedView;
+
+		public ViewGlobalFocusChangeListener(Map<View, FieldInfo> infoMap, View formContainer, Object target, IValidationCallback callback) {
+			this.infoMap = infoMap;
+			this.formContainer = formContainer;
+			this.target = target;
+			this.callback = callback;
+		}
+
+		@Override
+		public void onGlobalFocusChanged(View oldFocus, View newFocus) {
+			// dunno why, but oldFocus is absolutely wrong
+			if (this.currentlyFocusedView != null && this.currentlyFocusedView != newFocus) {
+				FieldInfo info = this.infoMap.get(this.currentlyFocusedView);
+				if (info != null) {
+					final ValidationFail validationFail = performFieldValidations(this.formContainer.getContext(), target, info, this.currentlyFocusedView);
+
+					if (validationFail != null && callback != null) {
+						// we have a failed validation
+						this.callback.validationComplete(false, Collections.singletonList(validationFail));
+					}
+				}
+			}
+
+			this.currentlyFocusedView = newFocus;
 		}
 	}
 }
