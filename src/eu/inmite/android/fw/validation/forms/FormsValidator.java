@@ -130,7 +130,8 @@ public class FormsValidator {
 
 				if (! isValid) {
 					final String message = valInfo.validator.getMessage(context, annotation, value);
-					failedValidations.add(new ValidationResult(view, message));
+					final int order = valInfo.validator.getOrder(annotation);
+					failedValidations.add(new ValidationResult(view, message, order));
 
 					// no more validations on this field
 					break;
@@ -139,6 +140,12 @@ public class FormsValidator {
 		}
 
 		if (callback != null) {
+			Collections.sort(failedValidations, new Comparator<ValidationResult>() {
+				@Override
+				public int compare(ValidationResult lhs, ValidationResult rhs) {
+					return lhs.order < rhs.order ? -1 : (lhs.order == rhs.order ? 0 : 1);
+				}
+			});
 			callback.validationComplete(result, failedValidations);
 		}
 		return result;
@@ -186,6 +193,14 @@ public class FormsValidator {
 				}
 
 				final Condition conditionAnnotation = field.getAnnotation(Condition.class);
+				if (infos.size() > 0) {
+					Collections.sort(infos, new Comparator<ValidationInfo>() {
+						@Override
+						public int compare(ValidationInfo lhs, ValidationInfo rhs) {
+							return lhs.order < rhs.order ? -1 : (lhs.order == rhs.order ? 0 : 1);
+						}
+					});
+				}
 				FieldInfo fieldInfo = new FieldInfo(conditionAnnotation, infos);
 				infoMap.put(view, fieldInfo);
 			}
@@ -223,10 +238,12 @@ public class FormsValidator {
 	private static class ValidationInfo {
 		private final Annotation annotation;
 		private final IValidator validator;
+		private final int order;
 
 		private ValidationInfo(Annotation annotation, IValidator validator) {
 			this.annotation = annotation;
 			this.validator = validator;
+			this.order = validator.getOrder(annotation);
 		}
 	}
 
@@ -243,10 +260,12 @@ public class FormsValidator {
 	public static final class ValidationResult {
 		public final View view;
 		public final String message;
+		private final int order;
 
-		private ValidationResult(View view, String message) {
+		private ValidationResult(View view, String message, int order) {
 			this.view = view;
 			this.message = message;
+			this.order = order;
 		}
 	}
 }

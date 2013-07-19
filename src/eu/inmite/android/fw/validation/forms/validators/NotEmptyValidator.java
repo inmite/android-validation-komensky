@@ -15,7 +15,6 @@ import android.content.Context;
 import android.text.TextUtils;
 import eu.inmite.android.fw.validation.forms.annotations.NotEmpty;
 import eu.inmite.android.fw.validation.forms.annotations.ValidatorFor;
-import eu.inmite.android.fw.validation.forms.iface.IValidator;
 
 import java.lang.annotation.Annotation;
 
@@ -23,7 +22,7 @@ import java.lang.annotation.Annotation;
  * @author Tomas Vondracek
  */
 @ValidatorFor(NotEmpty.class)
-public class NotEmptyValidator implements IValidator<CharSequence> {
+public class NotEmptyValidator extends BaseValidator<CharSequence> {
 
 	@Override
 	public boolean validate(Annotation annotation, CharSequence input) {

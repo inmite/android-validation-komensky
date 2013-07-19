@@ -23,4 +23,6 @@ public interface IValidator<T> {
 	public boolean validate(Annotation annotation, T input);
 
 	String getMessage(Context context, Annotation annotation, T input);
+
+	int getOrder(Annotation annotation);
 }

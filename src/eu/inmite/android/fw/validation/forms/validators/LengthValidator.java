@@ -11,9 +11,10 @@
 
 package eu.inmite.android.fw.validation.forms.validators;
 
-import android.content.Context;
-import eu.inmite.android.fw.validation.forms.annotations.*;
-import eu.inmite.android.fw.validation.forms.iface.IValidator;
+import eu.inmite.android.fw.validation.forms.annotations.ComparingPolicy;
+import eu.inmite.android.fw.validation.forms.annotations.MaxLength;
+import eu.inmite.android.fw.validation.forms.annotations.MinLength;
+import eu.inmite.android.fw.validation.forms.annotations.ValidatorFor;
 
 import java.lang.annotation.Annotation;
 
@@ -21,7 +22,7 @@ import java.lang.annotation.Annotation;
  * @author Tomas Vondracek
  */
 @ValidatorFor({MinLength.class, MaxLength.class})
-public class LengthValidator implements IValidator<CharSequence> {
+public class LengthValidator extends BaseValidator<CharSequence> {
 
 	@Override
 	public boolean validate(Annotation annotation, CharSequence input) {
@@ -45,17 +46,5 @@ public class LengthValidator implements IValidator<CharSequence> {
 		} else {
 			throw new IllegalStateException("unknown annotation " + annotation);
 		}
-	}
-
-	@Override
-	public String getMessage(Context context, Annotation annotation, CharSequence input) {
-		Object value = AnnotationsHelper.getAnnotationValue(annotation);
-		Integer messageId = (Integer) AnnotationsHelper.getAnnotationValueWithName(annotation, "messageId");
-
-		String message = null;
-		if (messageId != null && messageId > 0) {
-			message = context.getString(messageId, value, input);
-		}
-		return message;
 	}
 }

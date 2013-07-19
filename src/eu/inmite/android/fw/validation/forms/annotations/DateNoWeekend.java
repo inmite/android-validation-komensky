@@ -33,4 +33,5 @@ public @interface DateNoWeekend {
 	 */
 	int dateStyle() default DateFormat.SHORT;
 	int messageId() default 0;
+	int order() default 1000;
 }

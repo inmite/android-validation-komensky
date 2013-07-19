@@ -25,4 +25,5 @@ public @interface MaxValue {
 	long value();
 	ComparingPolicy policy() default ComparingPolicy.INCLUSIVE;
 	int messageId() default 0;
+	int order() default 1000;
 }

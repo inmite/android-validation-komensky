@@ -16,7 +16,6 @@ import android.text.TextUtils;
 import eu.inmite.android.fw.validation.forms.annotations.AnnotationsHelper;
 import eu.inmite.android.fw.validation.forms.annotations.DateNoWeekend;
 import eu.inmite.android.fw.validation.forms.annotations.ValidatorFor;
-import eu.inmite.android.fw.validation.forms.iface.IValidator;
 
 import java.lang.annotation.Annotation;
 import java.text.DateFormat;
@@ -29,7 +28,7 @@ import java.util.Date;
  * @author Tomas Vondracek
  */
 @ValidatorFor(DateNoWeekend.class)
-public class DateValidator implements IValidator<String> {
+public class DateValidator extends BaseValidator<String> {
 
 	@Override
 	public boolean validate(Annotation annotation, String input) {

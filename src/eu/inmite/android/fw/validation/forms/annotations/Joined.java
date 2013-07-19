@@ -20,4 +20,5 @@ public @interface Joined {
 	int[] value();
 	Class<? extends IValidator<String[]>> validator();
 	int messageId() default 0;
+	int order() default 1000;
 }

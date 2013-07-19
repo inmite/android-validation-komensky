@@ -26,4 +26,5 @@ import java.lang.annotation.Target;
 public @interface Custom {
 	Class<? extends IValidator> value();
 	int messageId() default 0;
+	int order() default 1000;
 }

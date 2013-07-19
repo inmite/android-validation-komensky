@@ -24,4 +24,5 @@ import java.lang.annotation.Target;
 public @interface Length {
 	int value();
 	int messageId() default 0;
+	int order() default 1000;
 }

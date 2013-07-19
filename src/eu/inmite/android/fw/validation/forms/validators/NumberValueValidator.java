@@ -11,11 +11,12 @@
 
 package eu.inmite.android.fw.validation.forms.validators;
 
-import android.content.Context;
 import android.text.TextUtils;
 import eu.inmite.android.fw.validation.forms.Utils;
-import eu.inmite.android.fw.validation.forms.annotations.*;
-import eu.inmite.android.fw.validation.forms.iface.IValidator;
+import eu.inmite.android.fw.validation.forms.annotations.ComparingPolicy;
+import eu.inmite.android.fw.validation.forms.annotations.MaxNumberValue;
+import eu.inmite.android.fw.validation.forms.annotations.MinNumberValue;
+import eu.inmite.android.fw.validation.forms.annotations.ValidatorFor;
 
 import java.lang.annotation.Annotation;
 import java.math.BigDecimal;
@@ -24,7 +25,7 @@ import java.math.BigDecimal;
  * @author Tomas Vondracek
  */
 @ValidatorFor({MinNumberValue.class, MaxNumberValue.class})
-public class NumberValueValidator implements IValidator<CharSequence> {
+public class NumberValueValidator extends BaseValidator<CharSequence> {
 
 	@Override
 	public boolean validate(Annotation annotation, CharSequence input) {
@@ -55,17 +56,5 @@ public class NumberValueValidator implements IValidator<CharSequence> {
 		} else {
 			throw new IllegalStateException("unknown annotation for ValueValidator " + annotation);
 		}
-	}
-
-	@Override
-	public String getMessage(Context context, Annotation annotation, CharSequence input) {
-		String value = (String) AnnotationsHelper.getAnnotationValue(annotation);
-		Integer messageId = (Integer) AnnotationsHelper.getAnnotationValueWithName(annotation, "messageId");
-
-		String message = null;
-		if (messageId != null && messageId > 0) {
-			message = context.getString(messageId, value, input);
-		}
-		return message;
 	}
 }

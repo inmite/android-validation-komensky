@@ -1,7 +1,6 @@
 package eu.inmite.android.fw.validation.forms.validators;
 
 import android.content.Context;
-import eu.inmite.android.fw.validation.forms.iface.IValidator;
 
 import java.lang.annotation.Annotation;
 
@@ -10,7 +9,7 @@ import java.lang.annotation.Annotation;
  *
  * @author Tomas Vondracek
  */
-public class CzechBankAccountNumberValidator implements IValidator<String[]> {
+public class CzechBankAccountNumberValidator extends BaseValidator<String[]> {
 
 	private static final int[] PREFIX_WEIGHTS = {10, 5, 8, 4, 2, 1};
 	private static final int[] NUMBER_WEIGHTS = {6, 3, 7, 9, 10, 5, 8, 4, 2, 1};

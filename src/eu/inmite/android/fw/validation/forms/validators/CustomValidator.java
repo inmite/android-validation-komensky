@@ -11,12 +11,10 @@
 
 package eu.inmite.android.fw.validation.forms.validators;
 
-import android.content.Context;
-import eu.inmite.android.fw.validation.forms.annotations.AnnotationsHelper;
+import eu.inmite.android.fw.validation.exception.FormsValidationException;
 import eu.inmite.android.fw.validation.forms.annotations.Custom;
 import eu.inmite.android.fw.validation.forms.annotations.Joined;
 import eu.inmite.android.fw.validation.forms.annotations.ValidatorFor;
-import eu.inmite.android.fw.validation.exception.FormsValidationException;
 import eu.inmite.android.fw.validation.forms.iface.IValidator;
 
 import java.lang.annotation.Annotation;
@@ -25,7 +23,7 @@ import java.lang.annotation.Annotation;
  * @author Tomas Vondracek
  */
 @ValidatorFor({Joined.class, Custom.class})
-public class CustomValidator implements IValidator<Object> {
+public class CustomValidator extends BaseValidator<Object> {
 
 	@Override
 	public boolean validate(Annotation annotation, Object input) {
@@ -52,15 +50,4 @@ public class CustomValidator implements IValidator<Object> {
 		}
 	}
 
-	@Override
-	public String getMessage(Context context, Annotation annotation, Object input) {
-		Object value = AnnotationsHelper.getAnnotationValue(annotation);
-		Integer messageId = (Integer) AnnotationsHelper.getAnnotationValueWithName(annotation, "messageId");
-
-		String message = null;
-		if (messageId != null && messageId > 0) {
-			message = context.getString(messageId, value, input);
-		}
-		return message;
-	}
 }
