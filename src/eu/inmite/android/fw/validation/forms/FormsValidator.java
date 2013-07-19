@@ -20,6 +20,7 @@ import eu.inmite.android.fw.validation.exception.FormsValidationException;
 import eu.inmite.android.fw.validation.forms.annotations.Condition;
 import eu.inmite.android.fw.validation.forms.iface.ICondition;
 import eu.inmite.android.fw.validation.forms.iface.IFieldAdapter;
+import eu.inmite.android.fw.validation.forms.iface.IValidationCallback;
 import eu.inmite.android.fw.validation.forms.iface.IValidator;
 import eu.inmite.android.fw.validation.forms.validators.ValidatorFactory;
 
@@ -30,10 +31,6 @@ import java.util.*;
  * @author Tomas Vondracek
  */
 public class FormsValidator {
-
-	public static interface IValidationCallback {
-		void validationComplete(boolean result, List<ValidationFail> failedValidations);
-	}
 
 	private static Map<Object, ViewGlobalFocusChangeListener> sContinuesValidations;
 
@@ -91,7 +88,7 @@ public class FormsValidator {
 	}
 
 	/**
-	 * stop previously started continues validation by {@link #startContinuousValidation(Object, android.view.View, eu.inmite.android.fw.validation.forms.FormsValidator.IValidationCallback)}
+	 * stop previously started continues validation by {@link #startContinuousValidation(Object, android.view.View, eu.inmite.android.fw.validation.forms.iface.IValidationCallback)}
 	 * @param target continuous validation is recognized by target object
 	 * @return true if there was continuous validation to stop
 	 */

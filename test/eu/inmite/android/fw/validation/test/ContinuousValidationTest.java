@@ -17,6 +17,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import eu.inmite.android.fw.validation.forms.FormsValidator;
 import eu.inmite.android.fw.validation.forms.annotations.NotEmpty;
+import eu.inmite.android.fw.validation.forms.iface.IValidationCallback;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -65,7 +66,7 @@ public class ContinuousValidationTest {
 	public void startedValidationShouldBeStoppable() {
 		ModelWithValidation model = initModel();
 
-		FormsValidator.startContinuousValidation(model, model.layout, new FormsValidator.IValidationCallback() {
+		FormsValidator.startContinuousValidation(model, model.layout, new IValidationCallback() {
 			@Override
 			public void validationComplete(boolean result, List<FormsValidator.ValidationFail> failedValidations) {
 			}
