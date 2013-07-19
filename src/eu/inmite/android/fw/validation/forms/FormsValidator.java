@@ -24,7 +24,6 @@ import eu.inmite.android.fw.validation.forms.iface.IValidator;
 import eu.inmite.android.fw.validation.forms.validators.ValidatorFactory;
 
 import java.lang.annotation.Annotation;
-import java.lang.reflect.Field;
 import java.util.*;
 
 /**
@@ -36,7 +35,6 @@ public class FormsValidator {
 		void validationComplete(boolean result, List<ValidationFail> failedValidations);
 	}
 
-	private static final WeakHashMap<Object, Map<View, FieldInfo>> sCachedFieldsByTarget = new WeakHashMap<Object, Map<View, FieldInfo>>();
 	private static Map<Object, ViewGlobalFocusChangeListener> sContinuesValidations;
 
 	/**
@@ -52,12 +50,24 @@ public class FormsValidator {
 	}
 
 	public static boolean clearCaches() {
-		final boolean cleaned = ! sCachedFieldsByTarget.isEmpty();
-		sCachedFieldsByTarget.clear();
-
-		return cleaned;
+		return FieldFinder.clearCache();
 	}
 
+	/**
+	 * start continuous validation - whenever focus changes from view with validations upon itself, validators will run.
+	 * @param fragment fragment with views to validate, there can be only one continuous validation per target object (fragment)
+	 * @param callback callback invoked whenever there is some validation fail
+	 */
+	public static void startContinuousValidation(final Fragment fragment, final IValidationCallback callback) {
+		startContinuousValidation(fragment, fragment.getView(), callback);
+	}
+
+	/**
+	 * start continuous validation - whenever focus changes from view with validations upon itself, validators will run.
+	 * @param target target with views to validate, there can be only one continuous validation per target
+	 * @param formContainer view that contains our form (views to validate)
+	 * @param callback callback invoked whenever there is some validation fail
+	 */
 	public static void startContinuousValidation(final Object target, final View formContainer, final IValidationCallback callback) {
 		if (formContainer == null) {
 			throw new IllegalArgumentException("form container view cannot be null");
@@ -73,13 +83,18 @@ public class FormsValidator {
 			return;
 		}
 
-		final Map<View, FieldInfo> infoMap = getFieldsForTarget(target);
+		final Map<View, FieldInfo> infoMap = FieldFinder.getFieldsForTarget(target);
 		final ViewGlobalFocusChangeListener listener = new ViewGlobalFocusChangeListener(infoMap, formContainer, target, callback);
 		formContainer.getViewTreeObserver().addOnGlobalFocusChangeListener(listener);
 		sContinuesValidations.put(target, listener);
 
 	}
 
+	/**
+	 * stop previously started continues validation by {@link #startContinuousValidation(Object, android.view.View, eu.inmite.android.fw.validation.forms.FormsValidator.IValidationCallback)}
+	 * @param target continuous validation is recognized by target object
+	 * @return true if there was continuous validation to stop
+	 */
 	public static boolean stopContinuousValidation(final Object target) {
 		if (sContinuesValidations == null || ! sContinuesValidations.containsKey(target)) {
 			return false;
@@ -130,7 +145,7 @@ public class FormsValidator {
 		final List<ValidationFail> failedValidations = new ArrayList<ValidationFail>();
 		boolean result = true;
 
-		final Map<View, FieldInfo> infoMap = getFieldsForTarget(target);
+		final Map<View, FieldInfo> infoMap = FieldFinder.getFieldsForTarget(target);
 		for (Map.Entry<View, FieldInfo> entry : infoMap.entrySet()) {
 			final FieldInfo fieldInfo = entry.getValue();
 			final View view = entry.getKey();
@@ -194,72 +209,6 @@ public class FormsValidator {
 		return null;
 	}
 
-	private static Map<View, FieldInfo> getFieldsForTarget(Object target) {
-		Map<View, FieldInfo> infoMap = sCachedFieldsByTarget.get(target);
-		if (infoMap == null) {
-			infoMap = findFieldsToValidate(target);
-			sCachedFieldsByTarget.put(target, infoMap);
-		}
-		return infoMap;
-	}
-
-	/**
-	 * find fields on target to validate and prepare for their validation
-	 */
-	private static Map<View, FieldInfo> findFieldsToValidate(Object target) {
-		final Field[] fields = target.getClass().getDeclaredFields();
-		if (fields == null || fields.length == 0) {
-			return Collections.emptyMap();
-		}
-
-		final WeakHashMap<View, FieldInfo> infoMap = new WeakHashMap<View, FieldInfo>(fields.length);
-		for (Field field : fields) {
-			final List<ValidationInfo> infos = new ArrayList<ValidationInfo>();
-			final Annotation[] annotations = field.getDeclaredAnnotations();
-			if (annotations.length > 0) {
-				if (! View.class.isAssignableFrom(field.getType())) {
-					// next field
-					continue;
-				}
-				final View view;
-				try {
-					field.setAccessible(true);
-					view = (View) field.get(target);
-				} catch (IllegalAccessException e) {
-					throw new FormsValidationException(e);
-				}
-
-				for (Annotation annotation : annotations) {
-					IValidator validator;
-					try {
-						validator = ValidatorFactory.getValidator(annotation);
-					} catch (IllegalAccessException e) {
-						throw new FormsValidationException(e);
-					} catch (InstantiationException e) {
-						throw new FormsValidationException(e);
-					}
-					if (validator != null) {
-						ValidationInfo info = new ValidationInfo(annotation, validator);
-						infos.add(info);
-					}
-				}
-
-				final Condition conditionAnnotation = field.getAnnotation(Condition.class);
-				if (infos.size() > 0) {
-					Collections.sort(infos, new Comparator<ValidationInfo>() {
-						@Override
-						public int compare(ValidationInfo lhs, ValidationInfo rhs) {
-							return lhs.order < rhs.order ? -1 : (lhs.order == rhs.order ? 0 : 1);
-						}
-					});
-				}
-				FieldInfo fieldInfo = new FieldInfo(conditionAnnotation, infos);
-				infoMap.put(view, fieldInfo);
-			}
-		}
-		return infoMap;
-	}
-
 	@SuppressWarnings("unchecked")
 	private static boolean evaluateCondition(Object target, Condition conditionAnnotation) {
 		final View conditionView;
@@ -287,23 +236,23 @@ public class FormsValidator {
 		}
 	}
 
-	private static class ValidationInfo {
+	static class ValidationInfo {
 		private final Annotation annotation;
 		private final IValidator validator;
-		private final int order;
+		final int order;
 
-		private ValidationInfo(Annotation annotation, IValidator validator) {
+		ValidationInfo(Annotation annotation, IValidator validator) {
 			this.annotation = annotation;
 			this.validator = validator;
 			this.order = validator.getOrder(annotation);
 		}
 	}
 
-	private static class FieldInfo {
+	static class FieldInfo {
 		private final Condition condition;
 		private final List<ValidationInfo> validationInfoList;
 
-		private FieldInfo(Condition condition, List<ValidationInfo> validationInfoList) {
+		FieldInfo(Condition condition, List<ValidationInfo> validationInfoList) {
 			this.condition = condition;
 			this.validationInfoList = validationInfoList;
 		}
@@ -312,7 +261,7 @@ public class FormsValidator {
 	public static final class ValidationFail {
 		public final View view;
 		public final String message;
-		private final int order;
+		final int order;
 
 		private ValidationFail(View view, String message, int order) {
 			this.view = view;
@@ -321,7 +270,7 @@ public class FormsValidator {
 		}
 	}
 
-	private static class ViewGlobalFocusChangeListener implements ViewTreeObserver.OnGlobalFocusChangeListener {
+	static class ViewGlobalFocusChangeListener implements ViewTreeObserver.OnGlobalFocusChangeListener {
 
 		private final Map<View, FieldInfo> infoMap;
 		private final View formContainer;
