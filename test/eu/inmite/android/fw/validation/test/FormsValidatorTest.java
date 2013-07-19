@@ -33,7 +33,7 @@ import org.robolectric.annotation.Config;
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(manifest=Config.NONE)
-public class UiValidatorTest {
+public class FormsValidatorTest {
 
 	private static class SimpleModelUnderValidation {
 
@@ -51,7 +51,7 @@ public class UiValidatorTest {
 		}
 	}
 
-	private static class ModelWithCombineUnderValidation extends LinearLayout {
+	private static class ModelWithJoinedUnderValidation extends LinearLayout {
 
 		@NotEmpty
 		EditText editPrefix;
@@ -60,7 +60,7 @@ public class UiValidatorTest {
 		@Joined(value = {10000, 20000}, validator = CzechBankAccountNumberValidator.class)
 		TextView txtNumber;
 
-		private ModelWithCombineUnderValidation(Context context) {
+		private ModelWithJoinedUnderValidation(Context context) {
 			super(context);
 			txtNumber = new TextView(context);
 			txtNumber.setId(10000);
@@ -79,6 +79,18 @@ public class UiValidatorTest {
 		model.editMessage.setText("0123456789");
 
 		boolean result = FormsValidator.validate(Robolectric.application, model, null);
+		Assert.assertTrue(result);
+	}
+
+	@Test
+	public void validInputShouldPassRepeated() throws Exception {
+		SimpleModelUnderValidation model = new SimpleModelUnderValidation(Robolectric.application);
+		model.txtAmount.setText("10");
+		model.editMessage.setText("0123456789");
+
+		boolean result = FormsValidator.validate(Robolectric.application, model, null);
+		Assert.assertTrue(result);
+		result = FormsValidator.validate(Robolectric.application, model, null);
 		Assert.assertTrue(result);
 	}
 
@@ -114,7 +126,7 @@ public class UiValidatorTest {
 
 	@Test
 	public void combineValidationShouldPass() {
-		ModelWithCombineUnderValidation model = new ModelWithCombineUnderValidation(Robolectric.application);
+		ModelWithJoinedUnderValidation model = new ModelWithJoinedUnderValidation(Robolectric.application);
 		model.txtNumber.setText("123");
 		model.editPrefix.setText("0");
 
@@ -124,11 +136,29 @@ public class UiValidatorTest {
 
 	@Test
 	public void combineValidationShouldFailOnModulo() {
-		ModelWithCombineUnderValidation model = new ModelWithCombineUnderValidation(Robolectric.application);
+		ModelWithJoinedUnderValidation model = new ModelWithJoinedUnderValidation(Robolectric.application);
 		model.txtNumber.setText("1234");
 		model.editPrefix.setText("0");
 
 		boolean result = FormsValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
+	}
+
+	@Test
+	public void cacheShouldBeEmptyAfterGC() {
+		ModelWithJoinedUnderValidation model = new ModelWithJoinedUnderValidation(Robolectric.application);
+		model.txtNumber.setText("1234");
+		model.editPrefix.setText("0");
+		FormsValidator.validate(Robolectric.application, model, null);
+
+		model = null;
+		System.gc();    // target should be collected and cache should be empty
+		Robolectric.runBackgroundTasks();
+		Robolectric.runUiThreadTasks();
+		Robolectric.runUiThreadTasksIncludingDelayedTasks();
+		// TODO not sure about stability of this test
+		final boolean wasntEmpty = FormsValidator.clearCaches();
+
+		Assert.assertFalse(wasntEmpty);
 	}
 }

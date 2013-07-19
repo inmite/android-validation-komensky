@@ -24,8 +24,7 @@ import eu.inmite.android.fw.validation.forms.validators.ValidatorFactory;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 /**
  * @author Tomas Vondracek
@@ -35,6 +34,8 @@ public class FormsValidator {
 	public static interface IValidationCallback {
 		void validationComplete(boolean result, List<ValidationResult> failedValidations);
 	}
+
+	private static final WeakHashMap<Object, Map<View, FieldInfo>> sCachedFieldsByTarget = new WeakHashMap<Object, Map<View, FieldInfo>>();
 
 	/**
 	 * register custom validator
@@ -46,6 +47,13 @@ public class FormsValidator {
 		}
 
 		ValidatorFactory.registerValidatorClasses(validator);
+	}
+
+	public static boolean clearCaches() {
+		final boolean cleaned = ! sCachedFieldsByTarget.isEmpty();
+		sCachedFieldsByTarget.clear();
+
+		return cleaned;
 	}
 
 	/**
@@ -84,20 +92,71 @@ public class FormsValidator {
 
 		final List<ValidationResult> failedValidations = new ArrayList<ValidationResult>();
 		boolean result = true;
-		final Field[] fields = target.getClass().getDeclaredFields();
-		for (Field field : fields) {
-			final Condition conditionAnnotation = field.getAnnotation(Condition.class);
-			if (conditionAnnotation != null && conditionAnnotation.validationAnnotation().equals(Condition.class)) {
-				// condition is applied to all validations
-				boolean evaluation = evaluateCondition(target, conditionAnnotation);
 
+		Map<View, FieldInfo> infoMap = sCachedFieldsByTarget.get(target);
+		if (infoMap == null) {
+			infoMap = findFieldsToValidate(target);
+			sCachedFieldsByTarget.put(target, infoMap);
+		}
+		for (Map.Entry<View, FieldInfo> entry : infoMap.entrySet()) {
+			final FieldInfo fieldInfo = entry.getValue();
+			// first, we need to check if condition is not applied for all validations on field
+			if (fieldInfo.condition != null && fieldInfo.condition.validationAnnotation().equals(Condition.class)) {
+				// condition is applied to all validations on field
+				boolean evaluation = evaluateCondition(target, fieldInfo.condition);
 				if (! evaluation) {
 					// go to next field
 					continue;
 				}
 			}
 
-			Annotation[] annotations = field.getDeclaredAnnotations();
+			final View view = entry.getKey();
+			// field validations
+			for (ValidationInfo valInfo : fieldInfo.validationInfoList) {
+				final Annotation annotation = valInfo.annotation;
+				if (fieldInfo.condition != null && fieldInfo.condition.validationAnnotation().equals(annotation.annotationType())) {
+					boolean evaluation = evaluateCondition(target, fieldInfo.condition);
+
+					if (! evaluation) {
+						// continue to next annotation
+						continue;
+					}
+				}
+				final IFieldAdapter adapter = FieldAdapterFactory.getAdapterForField(view, annotation);
+
+				final Object value = adapter.getFieldValue(annotation, target, view);
+				final boolean isValid = valInfo.validator.validate(annotation, value);
+				result &= isValid;
+
+				if (! isValid) {
+					final String message = valInfo.validator.getMessage(context, annotation, value);
+					failedValidations.add(new ValidationResult(view, message));
+
+					// no more validations on this field
+					break;
+				}
+			}
+		}
+
+		if (callback != null) {
+			callback.validationComplete(result, failedValidations);
+		}
+		return result;
+	}
+
+	/**
+	 * find fields on target to validate and prepare for their validation
+	 */
+	private static Map<View, FieldInfo> findFieldsToValidate(Object target) {
+		final Field[] fields = target.getClass().getDeclaredFields();
+		if (fields == null || fields.length == 0) {
+			return Collections.emptyMap();
+		}
+
+		final WeakHashMap<View, FieldInfo> infoMap = new WeakHashMap<View, FieldInfo>(fields.length);
+		for (Field field : fields) {
+			final List<ValidationInfo> infos = new ArrayList<ValidationInfo>();
+			final Annotation[] annotations = field.getDeclaredAnnotations();
 			if (annotations.length > 0) {
 				if (! View.class.isAssignableFrom(field.getType())) {
 					// next field
@@ -112,44 +171,26 @@ public class FormsValidator {
 				}
 
 				for (Annotation annotation : annotations) {
+					IValidator validator;
 					try {
-						IValidator validator = ValidatorFactory.getValidator(annotation);
-						if (validator == null) {
-							continue;
-						}
-						if (conditionAnnotation != null && conditionAnnotation.validationAnnotation().equals(annotation.annotationType())) {
-							boolean evaluation = evaluateCondition(target, conditionAnnotation);
-
-							if (! evaluation) {
-								// continue to next annotation
-								continue;
-							}
-						}
-						IFieldAdapter adapter = FieldAdapterFactory.getAdapterForField(view, annotation);
-
-						Object value = adapter.getFieldValue(annotation, target, view);
-						boolean isValid = validator.validate(annotation, value);
-						result &= isValid;
-
-						if (! isValid) {
-							String message = validator.getMessage(context, annotation, value);
-							failedValidations.add(new ValidationResult(view, message));
-
-							// go to next field
-							break;
-						}
+						validator = ValidatorFactory.getValidator(annotation);
 					} catch (IllegalAccessException e) {
 						throw new FormsValidationException(e);
 					} catch (InstantiationException e) {
 						throw new FormsValidationException(e);
 					}
+					if (validator != null) {
+						ValidationInfo info = new ValidationInfo(annotation, validator);
+						infos.add(info);
+					}
 				}
+
+				final Condition conditionAnnotation = field.getAnnotation(Condition.class);
+				FieldInfo fieldInfo = new FieldInfo(conditionAnnotation, infos);
+				infoMap.put(view, fieldInfo);
 			}
 		}
-		if (callback != null) {
-			callback.validationComplete(result, failedValidations);
-		}
-		return result;
+		return infoMap;
 	}
 
 	@SuppressWarnings("unchecked")
@@ -176,6 +217,26 @@ public class FormsValidator {
 			throw new FormsValidationException(e);
 		} catch (IllegalAccessException e) {
 			throw new FormsValidationException(e);
+		}
+	}
+
+	private static class ValidationInfo {
+		private final Annotation annotation;
+		private final IValidator validator;
+
+		private ValidationInfo(Annotation annotation, IValidator validator) {
+			this.annotation = annotation;
+			this.validator = validator;
+		}
+	}
+
+	private static class FieldInfo {
+		private final Condition condition;
+		private final List<ValidationInfo> validationInfoList;
+
+		private FieldInfo(Condition condition, List<ValidationInfo> validationInfoList) {
+			this.condition = condition;
+			this.validationInfoList = validationInfoList;
 		}
 	}
 

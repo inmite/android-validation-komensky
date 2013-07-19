@@ -46,7 +46,7 @@ public class Utils {
 		if (amount != null) {
 			return amount;
 		} else {
-			// decimal formatter failed let's try it simple way
+			// decimal formatter failed let's try it the simple way
 			try {
 				amount = new BigDecimal(text);
 			} catch (Exception e) {
