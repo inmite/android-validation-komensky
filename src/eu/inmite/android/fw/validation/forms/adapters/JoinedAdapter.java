@@ -13,7 +13,7 @@ import java.lang.annotation.Annotation;
 /**
  * @author Tomas Vondracek
  */
-public class JoinedAdapter implements IFieldAdapter<String[]> {
+public class JoinedAdapter implements IFieldAdapter<View, String[]> {
 
 	@Override
 	public String[] getFieldValue(Annotation annotation, Object target, View fieldView) {
@@ -46,9 +46,9 @@ public class JoinedAdapter implements IFieldAdapter<String[]> {
 	}
 
 	private String valueFromView(View view) {
-		IFieldAdapter<String> adapter = FieldAdapterFactory.getAdapterForField(view, null);
+		IFieldAdapter adapter = FieldAdapterFactory.getAdapterForField(view, null);
 		if (adapter != null) {
-			return adapter.getFieldValue(null, null, view);
+			return String.valueOf(adapter.getFieldValue(null, null, view));
 		}
 		return null;
 	}

@@ -46,6 +46,24 @@ public class FormsValidator {
 		ValidatorFactory.registerValidatorClasses(validator);
 	}
 
+	public static void registerViewAdapter(Class<? extends View> viewType, Class<? extends IFieldAdapter<? extends View,?>> adapterClass) {
+		if (viewType == null || adapterClass == null) {
+			throw new IllegalArgumentException("arguments must not be null");
+		}
+
+		try {
+			FieldAdapterFactory.registerAdapter(viewType, adapterClass);
+		} catch (IllegalAccessException e) {
+			throw new FormsValidationException(e);
+		} catch (InstantiationException e) {
+			throw new FormsValidationException(e);
+		}
+	}
+
+	public static void clearViewAdapters() {
+		FieldAdapterFactory.clear();
+	}
+
 	public static boolean clearCaches() {
 		return FieldFinder.clearCache();
 	}

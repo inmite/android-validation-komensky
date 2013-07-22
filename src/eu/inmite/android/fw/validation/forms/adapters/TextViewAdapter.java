@@ -11,7 +11,6 @@
 
 package eu.inmite.android.fw.validation.forms.adapters;
 
-import android.view.View;
 import android.widget.TextView;
 import eu.inmite.android.fw.validation.forms.iface.IFieldAdapter;
 
@@ -20,11 +19,10 @@ import java.lang.annotation.Annotation;
 /**
  * @author Tomas Vondracek
  */
-public class TextViewAdapter implements IFieldAdapter<String> {
+public class TextViewAdapter implements IFieldAdapter<TextView, String> {
 
 	@Override
-	public String getFieldValue(Annotation annotation, Object target, View fieldView) {
-		TextView textView = (TextView) fieldView;
-		return textView.getText().toString();
+	public String getFieldValue(Annotation annotation, Object target, TextView fieldView) {
+		return fieldView.getText().toString();
 	}
 }

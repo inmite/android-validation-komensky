@@ -8,6 +8,8 @@ import eu.inmite.android.fw.validation.forms.annotations.Joined;
 import eu.inmite.android.fw.validation.forms.iface.IFieldAdapter;
 
 import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Tomas Vondracek
@@ -18,6 +20,15 @@ public class FieldAdapterFactory {
 
 	private static JoinedAdapter sJoinedAdapter;
 	private static TextViewAdapter sTextViewAdapter;
+
+	private static Map<Class<? extends View>, IFieldAdapter> sAdapters;
+
+	static void registerAdapter(Class<? extends View> viewType, Class<? extends IFieldAdapter> adapterClazz) throws IllegalAccessException, InstantiationException {
+		if (sAdapters == null) {
+			sAdapters = new HashMap<Class<? extends View>, IFieldAdapter>();
+		}
+		sAdapters.put(viewType, adapterClazz.newInstance());
+	}
 
 	public static IFieldAdapter getAdapterForField(View view, Annotation annotation) {
 		final IFieldAdapter adapter;
@@ -31,9 +42,19 @@ public class FieldAdapterFactory {
 				sTextViewAdapter = new TextViewAdapter();
 			}
 			adapter = sTextViewAdapter;
+		} else if (sAdapters != null && sAdapters.containsKey(view.getClass())) {
+			adapter = sAdapters.get(view.getClass());
 		} else {
 			adapter = null;
 		}
 		return adapter;
+	}
+
+	static void clear() {
+		if (sAdapters != null) {
+			sAdapters.clear();
+		}
+		sJoinedAdapter = null;
+		sTextViewAdapter = null;
 	}
 }

@@ -42,9 +42,9 @@ public class ValidatorFactory {
 		}
 
 		for (Class<? extends IValidator> clazz : classes) {
-			Annotation[] annotations = clazz.getAnnotations();
+			final Annotation[] annotations = clazz.getAnnotations();
 
-			// search for ValidatorFor annotation and read supported validations
+			// search for @ValidatorFor annotation and read supported validations
 			for (Annotation annotation : annotations) {
 				if (annotation instanceof ValidatorFor) {
 					Class<? extends Annotation>[] validationAnnotations = ((ValidatorFor) annotation).value();

@@ -18,7 +18,7 @@ import java.lang.annotation.Annotation;
 /**
  * @author Tomas Vondracek
  */
-public interface IFieldAdapter<T> {
+public interface IFieldAdapter<V extends View, T> {
 
-	T getFieldValue(Annotation annotation, Object target, View fieldView);
+	T getFieldValue(Annotation annotation, Object target, V fieldView);
 }
