@@ -100,9 +100,10 @@ public class FormsValidator {
 
 		final Map<View, FieldInfo> infoMap = FieldFinder.getFieldsForTarget(target);
 		final ViewGlobalFocusChangeListener listener = new ViewGlobalFocusChangeListener(infoMap, formContainer, target, callback);
-		formContainer.getViewTreeObserver().addOnGlobalFocusChangeListener(listener);
-		sContinuesValidations.put(target, listener);
+		final ViewTreeObserver observer = formContainer.getViewTreeObserver();
+		observer.addOnGlobalFocusChangeListener(listener);
 
+		sContinuesValidations.put(target, listener);
 	}
 
 	/**

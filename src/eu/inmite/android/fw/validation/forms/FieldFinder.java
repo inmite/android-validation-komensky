@@ -24,8 +24,23 @@ class FieldFinder {
 		return cleaned;
 	}
 
+	/**
+	 * get map of field information on view for given target
+	 */
 	static Map<View, FormsValidator.FieldInfo> getFieldsForTarget(Object target) {
 		Map<View, FormsValidator.FieldInfo> infoMap = sCachedFieldsByTarget.get(target);
+
+		if (infoMap != null) {
+			for (View view : infoMap.keySet()) {
+				// view has been removed from the window - we will need to scan fields of target again
+				if (view.getWindowToken() == null) {
+					infoMap = null;
+
+					break;
+				}
+			}
+		}
+
 		if (infoMap == null) {
 			infoMap = findFieldsToValidate(target);
 			sCachedFieldsByTarget.put(target, infoMap);
