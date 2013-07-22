@@ -19,6 +19,8 @@ public class ValidatorFactory {
 	private static final Map<Class<? extends Annotation>, Class<? extends IValidator>> sValidators = new HashMap<Class<? extends Annotation>, Class<? extends IValidator>>();
 
 	static {
+		// our default validators:
+
 		//noinspection unchecked
 		registerValidatorClasses(
 				CustomValidator.class,
@@ -30,7 +32,8 @@ public class ValidatorFactory {
 				LengthValidator.class,
 				ValueValidator.class,
 				NotEmptyValidator.class,
-				DateValidator.class);
+				DateValidator.class,
+				RegExpValidator.class);
 	}
 
 	public static void registerValidatorClasses(Class<? extends IValidator>... classes) {

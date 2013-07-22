@@ -7,6 +7,7 @@ import java.lang.annotation.*;
  *
  * @author Tomas Vondracek
  */
+@Inherited
 @Target(value= ElementType.TYPE)
 @Retention(value= RetentionPolicy.RUNTIME)
 public @interface ValidatorFor {

@@ -32,7 +32,7 @@ public class NumberValueValidator extends BaseValidator<CharSequence> {
 		if (TextUtils.isEmpty(input)) {
 			return false;
 		}
-		BigDecimal value;
+		final BigDecimal value;
 		try {
 			Number parsedNumber = Utils.parseAmount(input.toString());
 			value = new BigDecimal(parsedNumber.toString());
@@ -41,20 +41,30 @@ public class NumberValueValidator extends BaseValidator<CharSequence> {
 		}
 
 		if (annotation instanceof MinNumberValue) {
-			ComparingPolicy policy = ((MinNumberValue) annotation).policy();
-			BigDecimal minimum = new BigDecimal(((MinNumberValue) annotation).value());
-			int comparison = value.compareTo(minimum);
-			return policy == ComparingPolicy.EXCLUSIVE ?
-					comparison > 0 : comparison >= 0;
+			return validateMinimum((MinNumberValue) annotation, value);
 		} else if (annotation instanceof MaxNumberValue) {
-			ComparingPolicy policy = ((MaxNumberValue) annotation).policy();
-			BigDecimal maximum = new BigDecimal(((MaxNumberValue) annotation).value());
-
-			int comparison = value.compareTo(maximum);
-			return policy == ComparingPolicy.EXCLUSIVE ?
-					comparison < 0 : comparison <= 0;
+			return validateMaximum((MaxNumberValue) annotation, value);
 		} else {
-			throw new IllegalStateException("unknown annotation for ValueValidator " + annotation);
+			throw new IllegalStateException("unknown annotation for NumberValueValidator " + annotation);
 		}
+	}
+
+	private boolean validateMinimum(MinNumberValue annotation, BigDecimal value) {
+		final ComparingPolicy policy = annotation.policy();
+		final BigDecimal minimum = new BigDecimal(annotation.value());
+		final int comparison = value.compareTo(minimum);
+
+		return policy == ComparingPolicy.EXCLUSIVE ?
+				comparison > 0 : comparison >= 0;
+	}
+
+	private boolean validateMaximum(MaxNumberValue annotation, BigDecimal value) {
+		final ComparingPolicy policy = annotation.policy();
+		final BigDecimal maximum = new BigDecimal(annotation.value());
+
+		final int comparison = value.compareTo(maximum);
+
+		return policy == ComparingPolicy.EXCLUSIVE ?
+				comparison < 0 : comparison <= 0;
 	}
 }
