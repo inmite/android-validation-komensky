@@ -300,6 +300,7 @@ public class FormsValidator {
 			this.formContainer = formContainer;
 			this.target = target;
 			this.callback = callback;
+			this.currentlyFocusedView = formContainer.findFocus();
 		}
 
 		@Override
