@@ -9,8 +9,8 @@ import java.util.Map;
  */
 public class PojoValidationException extends Exception {
 
-	private Class<?> objectClass;
-	private Map<String, List<String>> invalidFields;
+	private final Class<?> objectClass;
+	private final Map<String, List<String>> invalidFields;
 
 	public PojoValidationException(Class<?> objectClass, Map<String, List<String>> invalidFields) {
 		this.objectClass = objectClass;

@@ -1,13 +1,24 @@
 package eu.inmite.android.fw.validation.pojo;
 
-import eu.inmite.android.fw.validation.exception.PojoValidationException;
-import eu.inmite.android.fw.validation.pojo.*;
-import eu.inmite.android.fw.validation.pojo.validators.*;
-
 import java.lang.reflect.Field;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
-/** Validate the data entity according to API specification
+import eu.inmite.android.fw.validation.exception.PojoValidationException;
+import eu.inmite.android.fw.validation.pojo.validators.IPojoValidator;
+import eu.inmite.android.fw.validation.pojo.validators.MaxPojoValidator;
+import eu.inmite.android.fw.validation.pojo.validators.MinPojoValidator;
+import eu.inmite.android.fw.validation.pojo.validators.NotNullPojoValidator;
+import eu.inmite.android.fw.validation.pojo.validators.SizePojoValidator;
+
+/**
+ * Validate the data entity according to API specification.
  * 
  * @author Tomáš Kypta
  * @since 17/04/2013
@@ -137,9 +148,7 @@ public class PojoValidator {
 		}
 
 		Field[] entityFields = type.getDeclaredFields();
-		for (Field field : entityFields) {
-			fields.add(field);
-		}
+		Collections.addAll(fields, entityFields);
 
 		return fields;
 	}

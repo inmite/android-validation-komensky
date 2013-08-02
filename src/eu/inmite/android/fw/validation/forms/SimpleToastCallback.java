@@ -2,12 +2,13 @@ package eu.inmite.android.fw.validation.forms;
 
 import android.content.Context;
 import android.widget.Toast;
-import eu.inmite.android.fw.validation.forms.iface.IValidationCallback;
 
 import java.util.List;
 
+import eu.inmite.android.fw.validation.forms.iface.IValidationCallback;
+
 /**
- * Validation callback that will show toast for first validation fail
+ * Validation callback that will show toast for first validation fail.
  *
  * @author Tomas Vondracek
  */

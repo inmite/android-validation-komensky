@@ -1,8 +1,8 @@
 package eu.inmite.android.fw.validation.forms.iface;
 
-import eu.inmite.android.fw.validation.forms.FormsValidator;
-
 import java.util.List;
+
+import eu.inmite.android.fw.validation.forms.FormsValidator;
 
 /**
 * @author Tomas Vondracek
@@ -10,7 +10,7 @@ import java.util.List;
 public interface IValidationCallback {
 
 	/**
-	 * validation completed callback
+	 * Validation completed callback.
 	 *
 	 * @param result true if validation passed
 	 * @param failedValidations collections of all failed validations, this collection should never be null

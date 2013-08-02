@@ -22,6 +22,7 @@ import java.lang.annotation.Target;
 @Target(value= ElementType.FIELD)
 @Retention(value= RetentionPolicy.RUNTIME)
 public @interface MaxLength {
+
 	int value();
 	ComparingPolicy policy() default ComparingPolicy.INCLUSIVE;
 	int messageId() default 0;

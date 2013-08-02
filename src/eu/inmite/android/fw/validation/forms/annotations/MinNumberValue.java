@@ -22,9 +22,9 @@ import java.lang.annotation.Target;
 @Target(value= ElementType.FIELD)
 @Retention(value= RetentionPolicy.RUNTIME)
 public @interface MinNumberValue {
+
 	/**
 	 * number as string, e.g. "100.3"
-	 * @return
 	 */
 	String value();
 	ComparingPolicy policy() default ComparingPolicy.INCLUSIVE;

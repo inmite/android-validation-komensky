@@ -13,9 +13,6 @@ package eu.inmite.android.fw.validation.forms.validators;
 
 import android.content.Context;
 import android.text.TextUtils;
-import eu.inmite.android.fw.validation.forms.annotations.AnnotationsHelper;
-import eu.inmite.android.fw.validation.forms.annotations.DateNoWeekend;
-import eu.inmite.android.fw.validation.forms.annotations.ValidatorFor;
 
 import java.lang.annotation.Annotation;
 import java.text.DateFormat;
@@ -23,6 +20,10 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+
+import eu.inmite.android.fw.validation.forms.annotations.AnnotationsHelper;
+import eu.inmite.android.fw.validation.forms.annotations.DateNoWeekend;
+import eu.inmite.android.fw.validation.forms.annotations.ValidatorFor;
 
 /**
  * @author Tomas Vondracek
@@ -44,10 +45,7 @@ public class DateValidator extends BaseValidator<String> {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
 			int day = cal.get(Calendar.DAY_OF_WEEK);
-			if (day == Calendar.SUNDAY|| day == Calendar.SATURDAY) {
-				return false;
-			}
-			return true;
+			return !(day == Calendar.SUNDAY || day == Calendar.SATURDAY);
 		} catch (ParseException e) {
 			return false;
 		}
