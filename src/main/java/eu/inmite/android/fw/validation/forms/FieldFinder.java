@@ -17,7 +17,7 @@ import java.util.*;
  */
 class FieldFinder {
 
-	private static final WeakHashMap<Object, Map<View, FormsValidator.FieldInfo>> sCachedFieldsByTarget = new WeakHashMap<Object, Map<View, FormsValidator.FieldInfo>>();
+	private static final WeakHashMap<Object, Map<View, FormValidator.FieldInfo>> sCachedFieldsByTarget = new WeakHashMap<Object, Map<View, FormValidator.FieldInfo>>();
 
 	static boolean clearCache() {
 		final boolean cleaned = ! sCachedFieldsByTarget.isEmpty();
@@ -29,8 +29,8 @@ class FieldFinder {
 	/**
 	 * get map of field information on view for given target
 	 */
-	static Map<View, FormsValidator.FieldInfo> getFieldsForTarget(Object target) {
-		Map<View, FormsValidator.FieldInfo> infoMap = sCachedFieldsByTarget.get(target);
+	static Map<View, FormValidator.FieldInfo> getFieldsForTarget(Object target) {
+		Map<View, FormValidator.FieldInfo> infoMap = sCachedFieldsByTarget.get(target);
 
 		if (infoMap != null) {
 			for (View view : infoMap.keySet()) {
@@ -53,15 +53,15 @@ class FieldFinder {
 	/**
 	 * find fields on target to validate and prepare for their validation
 	 */
-	private static Map<View, FormsValidator.FieldInfo> findFieldsToValidate(Object target) {
+	private static Map<View, FormValidator.FieldInfo> findFieldsToValidate(Object target) {
 		final Field[] fields = target.getClass().getDeclaredFields();
 		if (fields == null || fields.length == 0) {
 			return Collections.emptyMap();
 		}
 
-		final WeakHashMap<View, FormsValidator.FieldInfo> infoMap = new WeakHashMap<View, FormsValidator.FieldInfo>(fields.length);
+		final WeakHashMap<View, FormValidator.FieldInfo> infoMap = new WeakHashMap<View, FormValidator.FieldInfo>(fields.length);
 		for (Field field : fields) {
-			final List<FormsValidator.ValidationInfo> infos = new ArrayList<FormsValidator.ValidationInfo>();
+			final List<FormValidator.ValidationInfo> infos = new ArrayList<FormValidator.ValidationInfo>();
 			final Annotation[] annotations = field.getDeclaredAnnotations();
 			if (annotations.length > 0) {
 				if (! View.class.isAssignableFrom(field.getType())) {
@@ -86,21 +86,21 @@ class FieldFinder {
 						throw new FormsValidationException(e);
 					}
 					if (validator != null) {
-						FormsValidator.ValidationInfo info = new FormsValidator.ValidationInfo(annotation, validator);
+						FormValidator.ValidationInfo info = new FormValidator.ValidationInfo(annotation, validator);
 						infos.add(info);
 					}
 				}
 
 				final Condition conditionAnnotation = field.getAnnotation(Condition.class);
 				if (infos.size() > 0) {
-					Collections.sort(infos, new Comparator<FormsValidator.ValidationInfo>() {
+					Collections.sort(infos, new Comparator<FormValidator.ValidationInfo>() {
 						@Override
-						public int compare(FormsValidator.ValidationInfo lhs, FormsValidator.ValidationInfo rhs) {
+						public int compare(FormValidator.ValidationInfo lhs, FormValidator.ValidationInfo rhs) {
 							return lhs.order < rhs.order ? -1 : (lhs.order == rhs.order ? 0 : 1);
 						}
 					});
 				}
-				final FormsValidator.FieldInfo fieldInfo = new FormsValidator.FieldInfo(conditionAnnotation, infos);
+				final FormValidator.FieldInfo fieldInfo = new FormValidator.FieldInfo(conditionAnnotation, infos);
 				infoMap.put(view, fieldInfo);
 			}
 		}

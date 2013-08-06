@@ -3,7 +3,7 @@ package eu.inmite.android.fw.validation.forms.callback;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.widget.TextView;
-import eu.inmite.android.fw.validation.forms.FormsValidator;
+import eu.inmite.android.fw.validation.forms.FormValidator;
 
 /**
  * Callback that will show error text on first view with failed validation
@@ -29,7 +29,7 @@ public class SimpleErrorPopupCallback extends SimpleCallback {
 	}
 
 	@Override
-	protected void showValidationMessage(FormsValidator.ValidationFail firstFail) {
+	protected void showValidationMessage(FormValidator.ValidationFail firstFail) {
 		final TextView txt = (TextView) firstFail.view;
 		if (mErrorIcon != null) {
 			txt.setError(firstFail.message, mErrorIcon);

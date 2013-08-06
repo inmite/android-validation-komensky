@@ -2,7 +2,7 @@ package eu.inmite.android.fw.validation.forms.callback;
 
 import android.content.Context;
 import android.widget.Toast;
-import eu.inmite.android.fw.validation.forms.FormsValidator;
+import eu.inmite.android.fw.validation.forms.FormValidator;
 
 /**
  * Validation callback that will show toast for first validation fail
@@ -20,7 +20,7 @@ public class SimpleToastCallback extends SimpleCallback {
 	}
 
 	@Override
-	protected void showValidationMessage(FormsValidator.ValidationFail firstFail) {
+	protected void showValidationMessage(FormValidator.ValidationFail firstFail) {
 		Toast.makeText(mContext, firstFail.message, Toast.LENGTH_SHORT).show();
 	}
 }

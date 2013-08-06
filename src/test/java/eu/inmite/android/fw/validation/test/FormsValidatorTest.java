@@ -15,7 +15,7 @@ import android.content.Context;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import eu.inmite.android.fw.validation.forms.FormsValidator;
+import eu.inmite.android.fw.validation.forms.FormValidator;
 import eu.inmite.android.fw.validation.forms.annotations.Joined;
 import eu.inmite.android.fw.validation.forms.annotations.MinLength;
 import eu.inmite.android.fw.validation.forms.annotations.MinValue;
@@ -78,7 +78,7 @@ public class FormsValidatorTest {
 		model.txtAmount.setText("10");
 		model.editMessage.setText("0123456789");
 
-		boolean result = FormsValidator.validate(Robolectric.application, model, null);
+		boolean result = FormValidator.validate(Robolectric.application, model, null);
 		Assert.assertTrue(result);
 	}
 
@@ -88,9 +88,9 @@ public class FormsValidatorTest {
 		model.txtAmount.setText("10");
 		model.editMessage.setText("0123456789");
 
-		boolean result = FormsValidator.validate(Robolectric.application, model, null);
+		boolean result = FormValidator.validate(Robolectric.application, model, null);
 		Assert.assertTrue(result);
-		result = FormsValidator.validate(Robolectric.application, model, null);
+		result = FormValidator.validate(Robolectric.application, model, null);
 		Assert.assertTrue(result);
 	}
 
@@ -100,7 +100,7 @@ public class FormsValidatorTest {
 		model.txtAmount.setText("");
 		model.editMessage.setText(null);
 
-		boolean result = FormsValidator.validate(Robolectric.application, model, null);
+		boolean result = FormValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
 	}
 
@@ -110,7 +110,7 @@ public class FormsValidatorTest {
 		model.txtAmount.setText("0");
 		model.editMessage.setText("0123456789");
 
-		boolean result = FormsValidator.validate(Robolectric.application, model, null);
+		boolean result = FormValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
 	}
 
@@ -120,7 +120,7 @@ public class FormsValidatorTest {
 		model.txtAmount.setText("2");
 		model.editMessage.setText("00");
 
-		boolean result = FormsValidator.validate(Robolectric.application, model, null);
+		boolean result = FormValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
 	}
 
@@ -130,7 +130,7 @@ public class FormsValidatorTest {
 		model.txtNumber.setText("123");
 		model.editPrefix.setText("0");
 
-		boolean result = FormsValidator.validate(Robolectric.application, model, null);
+		boolean result = FormValidator.validate(Robolectric.application, model, null);
 		Assert.assertTrue(result);
 	}
 
@@ -140,7 +140,7 @@ public class FormsValidatorTest {
 		model.txtNumber.setText("1234");
 		model.editPrefix.setText("0");
 
-		boolean result = FormsValidator.validate(Robolectric.application, model, null);
+		boolean result = FormValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
 	}
 
@@ -149,7 +149,7 @@ public class FormsValidatorTest {
 		ModelWithJoinedUnderValidation model = new ModelWithJoinedUnderValidation(Robolectric.application);
 		model.txtNumber.setText("1234");
 		model.editPrefix.setText("0");
-		FormsValidator.validate(Robolectric.application, model, null);
+		FormValidator.validate(Robolectric.application, model, null);
 
 		model = null;
 		System.gc();    // target should be collected and cache should be empty
@@ -157,7 +157,7 @@ public class FormsValidatorTest {
 		Robolectric.runUiThreadTasks();
 		Robolectric.runUiThreadTasksIncludingDelayedTasks();
 		// TODO not sure about stability of this test
-		final boolean wasntEmpty = FormsValidator.clearCaches();
+		final boolean wasntEmpty = FormValidator.clearCaches();
 
 		Assert.assertFalse(wasntEmpty);
 	}

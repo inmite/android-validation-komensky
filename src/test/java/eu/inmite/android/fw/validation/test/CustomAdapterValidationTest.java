@@ -2,7 +2,7 @@ package eu.inmite.android.fw.validation.test;
 
 import android.content.Context;
 import android.view.View;
-import eu.inmite.android.fw.validation.forms.FormsValidator;
+import eu.inmite.android.fw.validation.forms.FormValidator;
 import eu.inmite.android.fw.validation.forms.annotations.MinLength;
 import eu.inmite.android.fw.validation.forms.annotations.NotEmpty;
 import eu.inmite.android.fw.validation.forms.iface.IFieldAdapter;
@@ -60,12 +60,12 @@ public class CustomAdapterValidationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		FormsValidator.registerViewAdapter(CustomView.class, CustomViewAdapter.class);
+		FormValidator.registerViewAdapter(CustomView.class, CustomViewAdapter.class);
 	}
 
 	@After
 	public void tearDown() throws Exception {
-		FormsValidator.clearViewAdapters();
+		FormValidator.clearViewAdapters();
 	}
 
 	@Test
@@ -73,7 +73,7 @@ public class CustomAdapterValidationTest {
 		ModelWithValidation model = new ModelWithValidation();
 		model.view.setCustomText("123");
 
-		final boolean valid = FormsValidator.validate(Robolectric.application, model, null);
+		final boolean valid = FormValidator.validate(Robolectric.application, model, null);
 		assertTrue(valid);
 	}
 
@@ -82,7 +82,7 @@ public class CustomAdapterValidationTest {
 		ModelWithValidation model = new ModelWithValidation();
 		model.view.setCustomText("");
 
-		final boolean valid = FormsValidator.validate(Robolectric.application, model, null);
+		final boolean valid = FormValidator.validate(Robolectric.application, model, null);
 		assertFalse(valid);
 	}
 }
