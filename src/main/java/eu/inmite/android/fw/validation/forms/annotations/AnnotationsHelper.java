@@ -3,6 +3,7 @@ package eu.inmite.android.fw.validation.forms.annotations;
 import java.lang.annotation.Annotation;
 
 /**
+ * Since annotations don't support inheritance, we use convention and this helper get values from annotation by convention.
  * @author Tomas Vondracek
  */
 public class AnnotationsHelper {

@@ -16,9 +16,18 @@ import android.view.View;
 import java.lang.annotation.Annotation;
 
 /**
+ * Adapter that gets the value from view.
+ *
  * @author Tomas Vondracek
  */
 public interface IFieldAdapter<V extends View, T> {
 
+	/**
+	 * get value of the field view
+	 * @param annotation validation annotation that currently is processing and needs the value
+	 * @param target target object that contains the field to get the value from
+	 * @param fieldView view to get the value from
+	 * @return value of field
+	 */
 	T getFieldValue(Annotation annotation, Object target, V fieldView);
 }

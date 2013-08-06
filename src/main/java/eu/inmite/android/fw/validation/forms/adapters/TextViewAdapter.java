@@ -17,6 +17,8 @@ import eu.inmite.android.fw.validation.forms.iface.IFieldAdapter;
 import java.lang.annotation.Annotation;
 
 /**
+ * Adapter for all views inherited from {@link TextView}
+ *
  * @author Tomas Vondracek
  */
 public class TextViewAdapter implements IFieldAdapter<TextView, String> {

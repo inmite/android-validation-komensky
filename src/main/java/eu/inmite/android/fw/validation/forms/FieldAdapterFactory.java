@@ -12,22 +12,27 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
+ * Created adapters for views with validation.
+ *
  * @author Tomas Vondracek
  */
 public class FieldAdapterFactory {
 
-	// TODO make it extensible for external adapters
-
 	private static JoinedAdapter sJoinedAdapter;
 	private static TextViewAdapter sTextViewAdapter;
 
-	private static Map<Class<? extends View>, IFieldAdapter> sAdapters;
+	private static Map<Class<? extends View>, IFieldAdapter> sExternalAdapters;
 
 	static void registerAdapter(Class<? extends View> viewType, Class<? extends IFieldAdapter> adapterClazz) throws IllegalAccessException, InstantiationException {
-		if (sAdapters == null) {
-			sAdapters = new HashMap<Class<? extends View>, IFieldAdapter>();
+		if (sExternalAdapters == null) {
+			sExternalAdapters = new HashMap<Class<? extends View>, IFieldAdapter>();
 		}
-		sAdapters.put(viewType, adapterClazz.newInstance());
+		sExternalAdapters.put(viewType, adapterClazz.newInstance());
+	}
+
+
+	public static IFieldAdapter getAdapterForField(View view) {
+		return getAdapterForField(view, null);
 	}
 
 	public static IFieldAdapter getAdapterForField(View view, Annotation annotation) {
@@ -42,8 +47,8 @@ public class FieldAdapterFactory {
 				sTextViewAdapter = new TextViewAdapter();
 			}
 			adapter = sTextViewAdapter;
-		} else if (sAdapters != null && sAdapters.containsKey(view.getClass())) {
-			adapter = sAdapters.get(view.getClass());
+		} else if (sExternalAdapters != null && sExternalAdapters.containsKey(view.getClass())) {
+			adapter = sExternalAdapters.get(view.getClass());
 		} else {
 			adapter = null;
 		}
@@ -51,8 +56,8 @@ public class FieldAdapterFactory {
 	}
 
 	static void clear() {
-		if (sAdapters != null) {
-			sAdapters.clear();
+		if (sExternalAdapters != null) {
+			sExternalAdapters.clear();
 		}
 		sJoinedAdapter = null;
 		sTextViewAdapter = null;

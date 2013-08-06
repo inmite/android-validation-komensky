@@ -11,6 +11,7 @@ import eu.inmite.android.fw.validation.forms.iface.IFieldAdapter;
 import java.lang.annotation.Annotation;
 
 /**
+ * Adapter that can be used together with {@link Joined} annotation. It gets values from multiple views.
  * @author Tomas Vondracek
  */
 public class JoinedAdapter implements IFieldAdapter<View, String[]> {

@@ -15,7 +15,7 @@ import android.content.Context;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import eu.inmite.android.fw.validation.forms.FormsValidator;
+import eu.inmite.android.fw.validation.forms.FormValidator;
 import eu.inmite.android.fw.validation.forms.annotations.NotEmpty;
 import eu.inmite.android.fw.validation.forms.iface.IValidationCallback;
 import org.junit.Test;
@@ -66,12 +66,12 @@ public class ContinuousValidationTest {
 	public void startedValidationShouldBeStoppable() {
 		ModelWithValidation model = initModel();
 
-		FormsValidator.startContinuousValidation(model, model.layout, new IValidationCallback() {
+		FormValidator.startLiveValidation(model, model.layout, new IValidationCallback() {
 			@Override
-			public void validationComplete(boolean result, List<FormsValidator.ValidationFail> failedValidations) {
+			public void validationComplete(boolean result, List<FormValidator.ValidationFail> failedValidations) {
 			}
 		});
-		boolean stopped = FormsValidator.stopContinuousValidation(model);
+		boolean stopped = FormValidator.stopContinuousValidation(model);
 		assertTrue(stopped);
 	}
 }

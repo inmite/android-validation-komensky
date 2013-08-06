@@ -3,7 +3,7 @@ package eu.inmite.android.fw.validation.forms.annotations;
 import java.lang.annotation.*;
 
 /**
- * Annotation for validators - this way they can specify what validation are they able to perform.
+ * Annotation for validators - this way we can specify what validation is validator able to perform.
  *
  * @author Tomas Vondracek
  */

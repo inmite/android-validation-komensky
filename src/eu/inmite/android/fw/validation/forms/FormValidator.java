@@ -28,14 +28,35 @@ import java.lang.annotation.Annotation;
 import java.util.*;
 
 /**
+ * <p>
+ *      Validate forms. Use either {@link #validate(android.support.v4.app.Fragment, eu.inmite.android.fw.validation.forms.iface.IValidationCallback)} methods
+ *      to validate all views at once or start live validation by calling {@link #startLiveValidation(android.support.v4.app.Fragment, eu.inmite.android.fw.validation.forms.iface.IValidationCallback)}.
+ * </p>
+ * <p>
+ *      Views inherited from {@link android.widget.TextView} are automatically recognized and can be validated, for other views you need to provide adapter and
+ *      register it by calling {@link #registerViewAdapter(Class, Class)}.
+ * </p>
+ * <p>
+ *     To validate multiple views at once by one validator, use {@link eu.inmite.android.fw.validation.forms.annotations.Joined} annotation. <br/>
+ *     You can also add condition to view and the validation will proceed only of the given condition is met, see {@link Condition}.
+ * </p>
+ * <p>
+ *      For all available validations see package {@link eu.inmite.android.fw.validation.forms.annotations}.
+ *      To add custom validation you can use {@link eu.inmite.android.fw.validation.forms.annotations.Custom} annotation and provide own {@link IValidator}.
+ * </p>
+ *
  * @author Tomas Vondracek
  */
-public class FormsValidator {
+public class FormValidator {
 
-	private static Map<Object, ViewGlobalFocusChangeListener> sContinuesValidations;
+	private static Map<Object, ViewGlobalFocusChangeListener> sLiveValidations;
 
 	/**
-	 * register custom validator
+	 * Register custom validator. This is only usable if you want to use custom validation annotations.
+	 * Otherwise you can use {@link eu.inmite.android.fw.validation.forms.annotations.Custom} annotation.
+	 *
+	 * @param validator validator class that is annotated with {@link eu.inmite.android.fw.validation.forms.annotations.ValidatorFor} annotation.
+	 * @throws IllegalArgumentException if validator is null
 	 */
 	@SuppressWarnings("unchecked")
 	public static void registerValidator(Class<? extends IValidator<?>> validator) {
@@ -46,6 +67,14 @@ public class FormsValidator {
 		ValidatorFactory.registerValidatorClasses(validator);
 	}
 
+	/**
+	 * Register adapter that can be used to get value from view.
+	 * @param viewType type of view adapter is determined to get values from
+	 * @param adapterClass class of adapter to register
+	 *
+	 * @throws IllegalArgumentException if adapterClass is null or viewType is null
+	 * @throws FormsValidationException when there is a problem when accessing adapter class
+	 */
 	public static void registerViewAdapter(Class<? extends View> viewType, Class<? extends IFieldAdapter<? extends View,?>> adapterClass) {
 		if (viewType == null || adapterClass == null) {
 			throw new IllegalArgumentException("arguments must not be null");
@@ -60,30 +89,41 @@ public class FormsValidator {
 		}
 	}
 
+	/**
+	 * remove all adapters that have been registered with {@link #registerValidator(Class)}
+	 */
 	public static void clearViewAdapters() {
 		FieldAdapterFactory.clear();
 	}
 
+	/**
+	 * Clear fields cache for all targets. In general this isn't necessary since cache is freed automatically.
+	 */
 	public static boolean clearCaches() {
 		return FieldFinder.clearCache();
 	}
 
 	/**
-	 * start continuous validation - whenever focus changes from view with validations upon itself, validators will run.
+	 * Start live validation - whenever focus changes from view with validations upon itself, validators will run. <br/>
+	 * Don't forget to call {@link #stopContinuousValidation(Object)} once you are done.
 	 * @param fragment fragment with views to validate, there can be only one continuous validation per target object (fragment)
 	 * @param callback callback invoked whenever there is some validation fail
 	 */
-	public static void startContinuousValidation(final Fragment fragment, final IValidationCallback callback) {
-		startContinuousValidation(fragment, fragment.getView(), callback);
+	public static void startLiveValidation(final Fragment fragment, final IValidationCallback callback) {
+		startLiveValidation(fragment, fragment.getView(), callback);
 	}
 
 	/**
-	 * start continuous validation - whenever focus changes from view with validations upon itself, validators will run.
+	 * Start live validation - whenever focus changes from view with validations upon itself, validators will run.<br/>
+ 	 * Don't forget to call {@link #stopContinuousValidation(Object)} once you are done.
+	 *
 	 * @param target target with views to validate, there can be only one continuous validation per target
 	 * @param formContainer view that contains our form (views to validate)
-	 * @param callback callback invoked whenever there is some validation fail
+	 * @param callback callback invoked whenever there is some validation fail, can be null
+
+	 * @throws IllegalArgumentException if formContainer or target is null
 	 */
-	public static void startContinuousValidation(final Object target, final View formContainer, final IValidationCallback callback) {
+	public static void startLiveValidation(final Object target, final View formContainer, final IValidationCallback callback) {
 		if (formContainer == null) {
 			throw new IllegalArgumentException("form container view cannot be null");
 		}
@@ -91,9 +131,9 @@ public class FormsValidator {
 			throw new IllegalArgumentException("target cannot be null");
 		}
 
-		if (sContinuesValidations == null) {
-			sContinuesValidations = new HashMap<Object, ViewGlobalFocusChangeListener>();
-		} else if (sContinuesValidations.containsKey(target)) {
+		if (sLiveValidations == null) {
+			sLiveValidations = new HashMap<Object, ViewGlobalFocusChangeListener>();
+		} else if (sLiveValidations.containsKey(target)) {
 			// validation is already running
 			return;
 		}
@@ -103,19 +143,19 @@ public class FormsValidator {
 		final ViewTreeObserver observer = formContainer.getViewTreeObserver();
 		observer.addOnGlobalFocusChangeListener(listener);
 
-		sContinuesValidations.put(target, listener);
+		sLiveValidations.put(target, listener);
 	}
 
 	/**
-	 * stop previously started continues validation by {@link #startContinuousValidation(Object, android.view.View, eu.inmite.android.fw.validation.forms.iface.IValidationCallback)}
-	 * @param target continuous validation is recognized by target object
-	 * @return true if there was continuous validation to stop
+	 * stop previously started live validation by {@link #startLiveValidation(Object, android.view.View, eu.inmite.android.fw.validation.forms.iface.IValidationCallback)}
+	 * @param target live validation is recognized by target object
+	 * @return true if there was live validation to stop
 	 */
 	public static boolean stopContinuousValidation(final Object target) {
-		if (sContinuesValidations == null || ! sContinuesValidations.containsKey(target)) {
+		if (sLiveValidations == null || ! sLiveValidations.containsKey(target)) {
 			return false;
 		}
-		final ViewGlobalFocusChangeListener removed = sContinuesValidations.remove(target);
+		final ViewGlobalFocusChangeListener removed = sLiveValidations.remove(target);
 		final ViewTreeObserver treeObserver = removed.formContainer.getViewTreeObserver();
 		if (treeObserver.isAlive()) {
 			treeObserver.removeOnGlobalFocusChangeListener(removed);
@@ -126,9 +166,10 @@ public class FormsValidator {
 	}
 
 	/**
-	 * perform validation over the activity
+	 * Perform validation over the views of the activity.
+	 *
 	 * @param activity activity with views to validate
-	 * @param callback callback the will receive result of validation
+	 * @param callback callback the will receive result of validation, results are ordered by order param in annotation.
 	 * @return whether the validation succeeded
 	 */
 	public static boolean validate(Activity activity, IValidationCallback callback) {
@@ -136,9 +177,10 @@ public class FormsValidator {
 	}
 
 	/**
-	 * perform validation over the given fragment
+	 * Perform validation over the views of given fragment
+	 *
 	 * @param fragment fragment with views to validate
-	 * @param callback callback the will receive result of validation
+	 * @param callback callback the will receive result of validation, results are ordered by order param in annotation.
 	 * @return whether the validation succeeded
 	 */
 	public static boolean validate(Fragment fragment, IValidationCallback callback) {
@@ -146,9 +188,14 @@ public class FormsValidator {
 	}
 
 	/**
-	 * perform validation over the target object
+	 * Perform validation over all fields on the target object. <br/>
+	 * Please note that if you have used joined validations over several fields at the same time,
+	 * target needs to be of type {@link Activity}, {@link Fragment} or {@link android.view.ViewGroup}. Exception will be thrown otherwise.
+	 *
 	 * @return whether the validation succeeded
-	 * @throws FormsValidationException
+	 *
+	 * @throws FormsValidationException if there is problem in validation process
+	 * @throws IllegalArgumentException if context or target is null
 	 */
 	public synchronized static boolean validate(Context context, Object target, IValidationCallback callback) throws FormsValidationException {
 		if (context == null) {
@@ -186,6 +233,9 @@ public class FormsValidator {
 		return result;
 	}
 
+	/**
+	 * perform all validations on single field
+	 */
 	@SuppressWarnings("unchecked")
 	private static ValidationFail performFieldValidations(Context context, Object target, FieldInfo fieldInfo, View view) {
 		// first, we need to check if condition is not applied for all validations on field
@@ -227,8 +277,8 @@ public class FormsValidator {
 
 	@SuppressWarnings("unchecked")
 	private static boolean evaluateCondition(Object target, Condition conditionAnnotation) {
-		final View conditionView;
 		final int viewId = conditionAnnotation.viewId();
+		final View conditionView;
 
 		if (target instanceof Activity) {
 			conditionView = ((Activity) target).findViewById(viewId);
@@ -240,9 +290,9 @@ public class FormsValidator {
 			throw new FormsValidationException("unknown target " + target);
 		}
 
-		Class<? extends ICondition> clazz = conditionAnnotation.value();
-		IFieldAdapter adapter = FieldAdapterFactory.getAdapterForField(conditionView, null);
-		Object value = adapter.getFieldValue(null, target, conditionView);
+		final Class<? extends ICondition> clazz = conditionAnnotation.value();
+		final IFieldAdapter adapter = FieldAdapterFactory.getAdapterForField(conditionView);
+		final Object value = adapter.getFieldValue(null, target, conditionView);
 		try {
 			return clazz.newInstance().evaluate(value);
 		} catch (InstantiationException e) {
@@ -274,6 +324,9 @@ public class FormsValidator {
 		}
 	}
 
+	/**
+	 * Holds information about failed validation on concrete view
+	 */
 	public static final class ValidationFail {
 		public final View view;
 		public final String message;
