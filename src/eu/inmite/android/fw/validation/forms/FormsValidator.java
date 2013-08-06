@@ -47,7 +47,7 @@ import java.util.*;
  *
  * @author Tomas Vondracek
  */
-public class FormValidator {
+public class FormsValidator {
 
 	private static Map<Object, ViewGlobalFocusChangeListener> sLiveValidations;
 

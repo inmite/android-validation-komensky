@@ -15,7 +15,7 @@ import android.content.Context;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import eu.inmite.android.fw.validation.forms.FormValidator;
+import eu.inmite.android.fw.validation.forms.FormsValidator;
 import eu.inmite.android.fw.validation.forms.annotations.*;
 import eu.inmite.android.fw.validation.forms.iface.ICondition;
 import junit.framework.Assert;
@@ -88,7 +88,7 @@ public class FormsValidatorWithConditionTest {
 		model.txtNumber.setText("");
 		model.editMessage.setText("");
 
-		boolean result = FormValidator.validate(Robolectric.application, model, null);
+		boolean result = FormsValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
 	}
 
@@ -97,7 +97,7 @@ public class FormsValidatorWithConditionTest {
 		ModelWithFailingConditionValidation model = new ModelWithFailingConditionValidation(Robolectric.application);
 		model.txtNumber.setText("");
 
-		boolean result = FormValidator.validate(Robolectric.application, model, null);
+		boolean result = FormsValidator.validate(Robolectric.application, model, null);
 		Assert.assertTrue("validate result should have been true, but it is " + result, result);
 	}
 

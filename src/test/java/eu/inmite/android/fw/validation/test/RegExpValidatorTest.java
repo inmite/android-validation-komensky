@@ -4,7 +4,7 @@ import android.content.Context;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import eu.inmite.android.fw.validation.forms.FormValidator;
+import eu.inmite.android.fw.validation.forms.FormsValidator;
 import eu.inmite.android.fw.validation.forms.annotations.RegExp;
 import eu.inmite.android.fw.validation.forms.iface.IValidationCallback;
 import org.junit.Test;
@@ -58,7 +58,7 @@ public class RegExpValidatorTest {
 		model.txtNotNumber.setText("absd,/.';");
 		model.editNumber.setText("0123456789");
 
-		final boolean valid = FormValidator.validate(Robolectric.application, model, null);
+		final boolean valid = FormsValidator.validate(Robolectric.application, model, null);
 		assertTrue(valid);
 	}
 
@@ -69,9 +69,9 @@ public class RegExpValidatorTest {
 		model.editNumber.setText("¡No pasarán!");
 
 		final int[] failCount = new int[1];
-		final boolean valid = FormValidator.validate(Robolectric.application, model, new IValidationCallback() {
+		final boolean valid = FormsValidator.validate(Robolectric.application, model, new IValidationCallback() {
 			@Override
-			public void validationComplete(boolean result, List<FormValidator.ValidationFail> failedValidations) {
+			public void validationComplete(boolean result, List<FormsValidator.ValidationFail> failedValidations) {
 				failCount[0] = failedValidations.size();
 			}
 		});
