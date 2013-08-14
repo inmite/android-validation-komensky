@@ -6,12 +6,12 @@
 		<groupId>eu.inmite.android.lib</groupId>
 		<artifactId>android-framework-parent</artifactId>
 		<relativePath>../pom.xml</relativePath>
-		<version>0.9.1-SNAPSHOT</version>
+		<version>0.9.1</version>
 	</parent>
 
 	<groupId>eu.inmite.android.lib</groupId>
 	<artifactId>android-framework-validation</artifactId>
-	<version>0.9.1-SNAPSHOT</version>
+	<version>0.9.1</version>
 	<packaging>jar</packaging>
 
 	<name>Android Framework Validation</name>
