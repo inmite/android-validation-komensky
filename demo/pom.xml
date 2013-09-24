@@ -9,35 +9,16 @@
 		<version>0.9.2-SNAPSHOT</version>
 	</parent>
 
-	<artifactId>android-validation-komensky</artifactId>
-	<version>0.9.2-SNAPSHOT</version>
-	<packaging>jar</packaging>
+	<artifactId>android-validation-komensky-demo</artifactId>
+	<packaging>apk</packaging>
 
-	<name>Android ValidationKomensky</name>
+	<name>ValidationKomensky Demo</name>
+
+	<properties>
+		<skipDefault>false</skipDefault>
+	</properties>
 
 	<dependencies>
-
-		<!-- for test -->
-		<dependency>
-			<groupId>org.robolectric</groupId>
-			<artifactId>robolectric</artifactId>
-			<version>2.1.1</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit-dep</artifactId>
-			<version>4.11</version>
-			<scope>test</scope>
-		</dependency>
-		<dependency>
-			<groupId>com.squareup</groupId>
-			<artifactId>fest-android</artifactId>
-			<version>1.0.5</version>
-			<scope>test</scope>
-		</dependency>
-
-
 		<dependency>
 			<groupId>com.google.android</groupId>
 			<artifactId>android</artifactId>
@@ -49,6 +30,23 @@
 			<artifactId>support-v4</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>eu.inmite.android.lib</groupId>
+			<artifactId>android-validation-komensky</artifactId>
+			<version>0.9.2-SNAPSHOT</version>
+			<type>jar</type>
+		</dependency>
 	</dependencies>
 
+	<build>
+		<sourceDirectory>src/main/java</sourceDirectory>
+
+		<plugins>
+			<plugin>
+				<groupId>com.jayway.maven.plugins.android.generation2</groupId>
+				<artifactId>android-maven-plugin</artifactId>
+				<extensions>true</extensions>
+			</plugin>
+		</plugins>
+	</build>
 </project>
