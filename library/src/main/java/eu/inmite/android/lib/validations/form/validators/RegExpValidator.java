@@ -23,7 +23,11 @@ public class RegExpValidator extends BaseValidator<CharSequence> {
 			mCompiledPattern = Pattern.compile(regexp);
 		}
 
-		final Matcher matcher = mCompiledPattern.matcher(input);
+		return validate(input, mCompiledPattern);
+	}
+
+	private boolean validate(final CharSequence input, final Pattern pattern) {
+		final Matcher matcher = pattern.matcher(input);
 		return matcher.matches();
 	}
 }

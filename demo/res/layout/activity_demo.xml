@@ -1,8 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:orientation="vertical"
+<GridLayout xmlns:android="http://schemas.android.com/apk/res/android"
 	android:layout_width="match_parent"
-	android:layout_height="match_parent">
+	android:layout_height="match_parent"
+	android:columnCount="2"
+	android:padding="8dp"
+	android:clickable="false">
 
-</LinearLayout>
+
+	<EditText
+		android:layout_width="match_parent"
+		android:layout_height="@dimen/row_height"
+		android:id="@+id/demo_name"
+		android:layout_row="0"
+		android:layout_column="0"
+		android:hint="Name"
+		android:layout_columnSpan="2" />
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="# of Participants"
+		android:id="@+id/textView1"
+		android:layout_row="1"
+		android:layout_column="0" />
+
+	<EditText
+		android:layout_width="@dimen/form_width"
+		android:layout_height="@dimen/row_height"
+		android:id="@+id/demo_participants"
+		android:layout_row="1"
+		android:layout_column="1"
+		android:layout_gravity="right"
+		android:hint="# Participants"
+		android:inputType="number" />
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Date"
+		android:id="@+id/textView2"
+		android:layout_row="2"
+		android:layout_column="0" />
+
+	<Button
+		android:layout_width="@dimen/form_width"
+		android:layout_height="@dimen/row_height"
+		android:text="Pick Date"
+		android:id="@+id/demo_date"
+		android:layout_row="2"
+		android:layout_column="1"
+		android:layout_gravity="right"
+		android:singleLine="true"
+		style="@android:style/Widget.Holo.Button.Borderless.Small" />
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Type"
+		android:id="@+id/textView3"
+		android:layout_row="3"
+		android:layout_column="0" />
+
+	<Spinner
+		android:layout_width="@dimen/form_width"
+		android:layout_height="@dimen/row_height"
+		android:id="@+id/demo_spinner"
+		android:layout_row="3"
+		android:layout_column="1"
+		android:layout_gravity="right"
+		style="@android:style/Widget.Holo.Spinner"
+		android:spinnerMode="dropdown" />
+
+	<TextView
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="Email"
+		android:id="@+id/textView4"
+		android:layout_row="4"
+		android:layout_column="0" />
+
+	<EditText
+		android:id="@+id/demo_email"
+		android:layout_width="@dimen/form_width"
+		android:layout_height="@dimen/row_height"
+		android:hint="E-mail address"
+		android:layout_row="4"
+		android:layout_column="1"
+		android:layout_gravity="right" />
+
+	<Button
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:text="OK"
+		android:id="@+id/demo_ok"
+		android:layout_row="5"
+		android:layout_column="0"
+		android:layout_columnSpan="2"
+		android:layout_gravity="bottom" />
+</GridLayout>

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<dimen name="row_height">42dp</dimen>
+	<dimen name="form_width">148dp</dimen>
+</resources>

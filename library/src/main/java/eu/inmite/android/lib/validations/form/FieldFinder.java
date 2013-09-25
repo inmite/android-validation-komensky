@@ -75,6 +75,9 @@ class FieldFinder {
 				} catch (IllegalAccessException e) {
 					throw new FormsValidationException(e);
 				}
+				if (view == null) {
+					continue;
+				}
 
 				for (Annotation annotation : annotations) {
 					final IValidator validator;

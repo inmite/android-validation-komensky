@@ -144,23 +144,4 @@ public class FormsValidatorTest {
 		boolean result = FormValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
 	}
-
-	@Ignore (value = "too unstable")
-	@Test
-	public void cacheShouldBeEmptyAfterGC() {
-		ModelWithJoinedUnderValidation model = new ModelWithJoinedUnderValidation(Robolectric.application);
-		model.txtNumber.setText("1234");
-		model.editPrefix.setText("0");
-		FormValidator.validate(Robolectric.application, model, null);
-
-		model = null;
-		System.gc();    // target should be collected and cache should be empty
-		Robolectric.runBackgroundTasks();
-		Robolectric.runUiThreadTasks();
-		Robolectric.runUiThreadTasksIncludingDelayedTasks();
-		// TODO not sure about stability of this test
-		final boolean wasntEmpty = FormValidator.clearCaches();
-
-		Assert.assertFalse(wasntEmpty);
-	}
 }

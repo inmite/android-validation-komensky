@@ -1,8 +1,10 @@
 package eu.inmite.android.lib.validations.form;
 
 import android.view.View;
+import android.widget.Spinner;
 import android.widget.TextView;
 import eu.inmite.android.lib.validations.form.adapters.JoinedAdapter;
+import eu.inmite.android.lib.validations.form.adapters.SpinnerAdapter;
 import eu.inmite.android.lib.validations.form.adapters.TextViewAdapter;
 import eu.inmite.android.lib.validations.form.annotations.Joined;
 import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
@@ -20,12 +22,13 @@ public class FieldAdapterFactory {
 
 	private static JoinedAdapter sJoinedAdapter;
 	private static TextViewAdapter sTextViewAdapter;
+	private static SpinnerAdapter sSpinnerViewAdapter;
 
-	private static Map<Class<? extends View>, IFieldAdapter> sExternalAdapters;
+	private static Map<Class<? extends View>, IFieldAdapter<? extends View,?>> sExternalAdapters;
 
-	static void registerAdapter(Class<? extends View> viewType, Class<? extends IFieldAdapter> adapterClazz) throws IllegalAccessException, InstantiationException {
+	static void registerAdapter(Class<? extends View> viewType, Class<? extends IFieldAdapter<? extends View,?>> adapterClazz) throws IllegalAccessException, InstantiationException {
 		if (sExternalAdapters == null) {
-			sExternalAdapters = new HashMap<Class<? extends View>, IFieldAdapter>();
+			sExternalAdapters = new HashMap<Class<? extends View>, IFieldAdapter<? extends View,?>>();
 		}
 		sExternalAdapters.put(viewType, adapterClazz.newInstance());
 	}
@@ -35,8 +38,8 @@ public class FieldAdapterFactory {
 		return getAdapterForField(view, null);
 	}
 
-	public static IFieldAdapter getAdapterForField(View view, Annotation annotation) {
-		final IFieldAdapter adapter;
+	public static IFieldAdapter<? extends View,?> getAdapterForField(View view, Annotation annotation) {
+		final IFieldAdapter<? extends View,?> adapter;
 		if (annotation != null && Joined.class.equals(annotation.annotationType())) {
 			if (sJoinedAdapter == null) {
 				sJoinedAdapter = new JoinedAdapter();
@@ -47,6 +50,11 @@ public class FieldAdapterFactory {
 				sTextViewAdapter = new TextViewAdapter();
 			}
 			adapter = sTextViewAdapter;
+		} else if (view instanceof Spinner) {
+			if (sSpinnerViewAdapter == null) {
+				sSpinnerViewAdapter = new SpinnerAdapter();
+			}
+			adapter = sSpinnerViewAdapter;
 		} else if (sExternalAdapters != null && sExternalAdapters.containsKey(view.getClass())) {
 			adapter = sExternalAdapters.get(view.getClass());
 		} else {
@@ -61,5 +69,6 @@ public class FieldAdapterFactory {
 		}
 		sJoinedAdapter = null;
 		sTextViewAdapter = null;
+		sSpinnerViewAdapter = null;
 	}
 }
