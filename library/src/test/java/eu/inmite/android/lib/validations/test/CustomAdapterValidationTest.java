@@ -2,10 +2,10 @@ package eu.inmite.android.lib.validations.test;
 
 import android.content.Context;
 import android.view.View;
-import eu.inmite.android.lib.validations.forms.FormValidator;
-import eu.inmite.android.lib.validations.forms.annotations.MinLength;
-import eu.inmite.android.lib.validations.forms.annotations.NotEmpty;
-import eu.inmite.android.lib.validations.forms.iface.IFieldAdapter;
+import eu.inmite.android.lib.validations.form.FormValidator;
+import eu.inmite.android.lib.validations.form.annotations.MinLength;
+import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
+import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
