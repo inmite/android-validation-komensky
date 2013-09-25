@@ -2,9 +2,12 @@
 <resources>
 	<string name="app_name">ValidationDemo</string>
 	<string name="validation_name">Please, enter the name</string>
-	<string name="valition_participants">Please, enter the number of participants</string>
+	<string name="validation_participants">Please, enter the number of participants</string>
 	<string name="validation_valid_email">Please, enter valid email address</string>
 	<string name="validation_date">Date must be in future</string>
 	<string name="validation_type">Please, select type</string>
 	<string name="validation_success">Validation succeeded! \nThat was easy, wasn\'t it?</string>
+
+	<string name="demo_menu_live_validation_enable">Enable live validation</string>
+	<string name="demo_menu_live_validation_disable">Disable live validation</string>
 </resources>

@@ -71,7 +71,7 @@ public class ContinuousValidationTest {
 			public void validationComplete(boolean result, List<FormValidator.ValidationFail> failedValidations) {
 			}
 		});
-		boolean stopped = FormValidator.stopContinuousValidation(model);
+		boolean stopped = FormValidator.stopLiveValidation(model);
 		assertTrue(stopped);
 	}
 }

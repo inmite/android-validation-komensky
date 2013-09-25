@@ -111,7 +111,7 @@ public class FormValidator {
 
 	/**
 	 * Start live validation - whenever focus changes from view with validations upon itself, validators will run. <br/>
-	 * Don't forget to call {@link #stopContinuousValidation(Object)} once you are done.
+	 * Don't forget to call {@link #stopLiveValidation(Object)} once you are done.
 	 * @param fragment fragment with views to validate, there can be only one continuous validation per target object (fragment)
 	 * @param callback callback invoked whenever there is some validation fail
 	 */
@@ -121,7 +121,7 @@ public class FormValidator {
 
 	/**
 	 * Start live validation - whenever focus changes from view with validations upon itself, validators will run.<br/>
- 	 * Don't forget to call {@link #stopContinuousValidation(Object)} once you are done.
+ 	 * Don't forget to call {@link #stopLiveValidation(Object)} once you are done.
 	 *
 	 * @param target target with views to validate, there can be only one continuous validation per target
 	 * @param formContainer view that contains our form (views to validate)
@@ -152,12 +152,16 @@ public class FormValidator {
 		sLiveValidations.put(target, listener);
 	}
 
+	public static boolean isLiveValidationRunning(final Object target) {
+		return sLiveValidations != null && sLiveValidations.containsKey(target);
+	}
+
 	/**
 	 * stop previously started live validation by {@link #startLiveValidation(Object, android.view.View, eu.inmite.android.lib.validations.form.iface.IValidationCallback)}
 	 * @param target live validation is recognized by target object
 	 * @return true if there was live validation to stop
 	 */
-	public static boolean stopContinuousValidation(final Object target) {
+	public static boolean stopLiveValidation(final Object target) {
 		if (sLiveValidations == null || ! sLiveValidations.containsKey(target)) {
 			return false;
 		}
