@@ -32,16 +32,17 @@ public class ValidatorFactory {
 				LengthValidator.class,
 				ValueValidator.class,
 				NotEmptyValidator.class,
-				DateValidator.class,
+				WeekendDateValidator.class,
+				FutureDateValidator.class,
 				RegExpValidator.class);
 	}
 
-	public static void registerValidatorClasses(Class<? extends IValidator>... classes) {
+	public static void registerValidatorClasses(Class<? extends IValidator<?>>... classes) {
 		if (classes == null || classes.length == 0) {
 			return;
 		}
 
-		for (Class<? extends IValidator> clazz : classes) {
+		for (Class<? extends IValidator<?>> clazz : classes) {
 			final Annotation[] annotations = clazz.getAnnotations();
 
 			// search for @ValidatorFor annotation and read supported validations
@@ -73,5 +74,9 @@ public class ValidatorFactory {
 			}
 		}
 		return validator;
+	}
+
+	public static void clearCachedValidators() {
+		sCachedValidatorInstances.evictAll();
 	}
 }

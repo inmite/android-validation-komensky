@@ -4,29 +4,24 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+import java.text.DateFormat;
 
 /**
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)
 @Retention(value= RetentionPolicy.RUNTIME)
-public @interface RegExp {
+public @interface DateInFuture {
+	/**
+	 * date pattern that will be used to parse input date
+	 */
+	String datePattern() default "";
 
-	// for patters se android.Util.Patterns
-
-	public static final String EMAIL =
-			"[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
-			"\\@" +
-			"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,64}" +
-			"(" +
-			"\\." +
-			"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
-			")+";
-
-	String value();
+	/**
+	 * if no pattern is defined date style will be used to initialize {@link java.text.DateFormat}
+	 */
+	int dateStyle() default DateFormat.SHORT;
 	int messageId() default 0;
 	int order() default 1000;
+	boolean allowToday() default true;
 }
-
-
-

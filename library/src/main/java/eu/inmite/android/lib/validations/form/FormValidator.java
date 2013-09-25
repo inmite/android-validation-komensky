@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import eu.inmite.android.lib.validations.exception.FormsValidationException;
+import eu.inmite.android.lib.validations.exception.NoFieldAdapterException;
 import eu.inmite.android.lib.validations.form.annotations.Condition;
 import eu.inmite.android.lib.validations.form.iface.ICondition;
 import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
@@ -95,6 +96,11 @@ public class FormValidator {
 	public static void clearViewAdapters() {
 		FieldAdapterFactory.clear();
 	}
+
+	public static void clear() {
+		ValidatorFactory.clearCachedValidators();
+	}
+
 
 	/**
 	 * Clear fields cache for all targets. In general this isn't necessary since cache is freed automatically.
@@ -189,7 +195,7 @@ public class FormValidator {
 
 	/**
 	 * Perform validation over all fields on the target object. <br/>
-	 * Please note that if you have used joined validations over several fields at the same time,
+	 * Please note that if you have used joined validations (see {@link eu.inmite.android.lib.validations.form.annotations.Joined} over several fields at the same time,
 	 * target needs to be of type {@link Activity}, {@link Fragment} or {@link android.view.ViewGroup}. Exception will be thrown otherwise.
 	 *
 	 * @return whether the validation succeeded
@@ -260,6 +266,9 @@ public class FormValidator {
 				}
 			}
 			final IFieldAdapter adapter = FieldAdapterFactory.getAdapterForField(view, annotation);
+			if (adapter == null) {
+				throw new NoFieldAdapterException(view, annotation);
+			}
 
 			final Object value = adapter.getFieldValue(annotation, target, view);
 			final boolean isValid = valInfo.validator.validate(annotation, value);
