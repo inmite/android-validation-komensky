@@ -20,7 +20,7 @@ public @interface DateInFuture {
 	/**
 	 * if no pattern is defined date style will be used to initialize {@link java.text.DateFormat}
 	 */
-	int dateStyle() default DateFormat.SHORT;
+	int dateStyle() default DateFormat.MEDIUM;
 	int messageId() default 0;
 	int order() default 1000;
 	boolean allowToday() default true;

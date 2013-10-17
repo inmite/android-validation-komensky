@@ -20,6 +20,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import static java.util.Calendar.*;
+
 /**
  * @author Tomas Vondracek
  */
@@ -39,9 +41,18 @@ public class FutureDateValidator extends BaseDateValidator {
 	}
 
 	@Override
-	protected boolean validateDate(final Calendar cal) {
-		final int day = cal.get(Calendar.DAY_OF_WEEK);
-		return !(day == Calendar.SUNDAY || day == Calendar.SATURDAY);
+	protected boolean validateDate(final Calendar cal, final Annotation annotation) {
+		final Calendar today = Calendar.getInstance();
+		today.set(HOUR, 0);
+		today.set(MINUTE, 0);
+		today.set(SECOND, 0);
+		today.set(MILLISECOND, 0);
+
+		DateInFuture dateAnnotation = (DateInFuture) annotation;
+		if (! dateAnnotation.allowToday()) {
+			today.add(DAY_OF_YEAR, 1);
+		}
+		return today.getTimeInMillis() <= cal.getTimeInMillis();
 	}
 
 }

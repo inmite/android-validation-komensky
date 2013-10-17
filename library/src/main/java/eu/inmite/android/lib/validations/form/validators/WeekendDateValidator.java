@@ -39,7 +39,7 @@ public class WeekendDateValidator extends BaseDateValidator {
 	}
 
 	@Override
-	protected boolean validateDate(final Calendar cal) {
+	protected boolean validateDate(final Calendar cal, final Annotation annotation) {
 		final int day = cal.get(Calendar.DAY_OF_WEEK);
 		return !(day == Calendar.SUNDAY || day == Calendar.SATURDAY);
 	}

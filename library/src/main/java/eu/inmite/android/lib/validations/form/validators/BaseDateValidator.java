@@ -16,7 +16,7 @@ public abstract class BaseDateValidator extends BaseValidator<String> {
 
 	protected abstract DateFormat getDateFormat(Annotation annotation);
 
-	protected abstract boolean validateDate(Calendar cal);
+	protected abstract boolean validateDate(Calendar cal, final Annotation annotation);
 
 	@Override
 	public boolean validate(Annotation annotation, String input) {
@@ -26,7 +26,7 @@ public abstract class BaseDateValidator extends BaseValidator<String> {
 			Calendar cal = Calendar.getInstance();
 			cal.setTime(date);
 
-			return validateDate(cal);
+			return validateDate(cal, annotation);
 		} catch (ParseException e) {
 			return false;
 		}
