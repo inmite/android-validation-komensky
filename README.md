@@ -10,7 +10,7 @@ Features:
 
 ## How to include it in your project:
 
-With Maven:
+~~With Maven:~~ (not yet, it will get in central soon)
 
     <dependency>
 		<groupId>eu.inmite.android.lib</groupId>
