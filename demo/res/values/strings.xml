@@ -10,4 +10,12 @@
 
 	<string name="demo_menu_live_validation_enable">Enable live validation</string>
 	<string name="demo_menu_live_validation_disable">Disable live validation</string>
+	<string name="demo_email_hint">E-mail address</string>
+	<string name="demo_email">Email</string>
+	<string name="demo_type">Type</string>
+	<string name="demo_pick_date">Pick Date</string>
+	<string name="demo_date">Date</string>
+	<string name="demo_participants_hint"># of participants</string>
+	<string name="demo_number_of_participants">Participants</string>
+	<string name="demo_name">Name</string>
 </resources>

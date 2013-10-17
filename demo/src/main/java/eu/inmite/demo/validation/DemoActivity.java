@@ -33,7 +33,7 @@ public class DemoActivity extends FragmentActivity implements DatePickerDialog.O
 	private EditText mEditName;
 
 	@NotEmpty
-	@MinValue(value = 1l, messageId = R.string.validation_participants, order = 2)
+	@MinValue(value = 1L, messageId = R.string.validation_participants, order = 2)
 	private EditText mEditNumberOfParticipants;
 
 	@NotEmpty(messageId = R.string.validation_valid_email)
@@ -41,7 +41,7 @@ public class DemoActivity extends FragmentActivity implements DatePickerDialog.O
 	private EditText mEditEmail;
 
 	@DateInFuture(messageId = R.string.validation_date)
-	private Button mBtnDate;
+	private TextView mTxtDate;
 
 	@NotEmpty(messageId = R.string.validation_type)
 	private Spinner mSpinner;
@@ -54,12 +54,12 @@ public class DemoActivity extends FragmentActivity implements DatePickerDialog.O
 		mEditName = (EditText) findViewById(R.id.demo_name);
 		mEditNumberOfParticipants = (EditText) findViewById(R.id.demo_participants);
 		mEditEmail = (EditText) findViewById(R.id.demo_email);
-		mBtnDate = (Button) findViewById(R.id.demo_date);
+		mTxtDate = (TextView) findViewById(R.id.demo_date);
 		mSpinner = (Spinner) findViewById(R.id.demo_spinner);
 
 		mSpinner.setAdapter(ArrayAdapter.createFromResource(this, R.array.demo_types, android.R.layout.simple_dropdown_item_1line));
 
-		mBtnDate.setOnClickListener(new View.OnClickListener() {
+		mTxtDate.setOnClickListener(new View.OnClickListener() {
 			@Override
 			public void onClick(final View v) {
 				DatePickerFragment fragment = new DatePickerFragment();
@@ -128,7 +128,8 @@ public class DemoActivity extends FragmentActivity implements DatePickerDialog.O
 
 	private void setDate(final Calendar cal) {
 		final DateFormat dateFormat = DateFormat.getDateInstance(DateFormat.MEDIUM);
-		mBtnDate.setText(dateFormat.format(cal.getTime()));
+		mTxtDate.setText(dateFormat.format(cal.getTime()));
+		mTxtDate.setError(null);
 	}
 
 	@Override

@@ -3,6 +3,6 @@
 	<string-array name="demo_types">
 		<item>Work</item>
 		<item>Party</item>
-		<item>Party</item>
+		<item></item>
 	</string-array>
 </resources>
