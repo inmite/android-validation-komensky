@@ -10,7 +10,7 @@ import eu.inmite.android.lib.validations.form.FormValidator;
  *
  * @author Tomas Vondracek
  */
-public class SimpleErrorPopupCallback extends SimpleCallback {
+public class SimpleErrorPopupCallback extends SimpleToastCallback {
 
 	private final Drawable mErrorIcon;
 
@@ -30,11 +30,15 @@ public class SimpleErrorPopupCallback extends SimpleCallback {
 
 	@Override
 	protected void showValidationMessage(FormValidator.ValidationFail firstFail) {
-		final TextView txt = (TextView) firstFail.view;
-		if (mErrorIcon != null) {
-			txt.setError(firstFail.message, mErrorIcon);
+		if (firstFail.view instanceof TextView) {
+			final TextView txt = (TextView) firstFail.view;
+			if (mErrorIcon != null) {
+				txt.setError(firstFail.message, mErrorIcon);
+			} else {
+				txt.setError(firstFail.message);
+			}
 		} else {
-			txt.setError(firstFail.message);
+			super.showValidationMessage(firstFail);
 		}
 	}
 }
