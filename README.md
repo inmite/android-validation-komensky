@@ -1,6 +1,9 @@
 # ValidationKomensky for Android
 Library for validating user input easily.
+
 Just annotate view fields with validation annotations and you are ready to validate user input with one line of code.
+
+![alt text](https://raw.github.com/inmite/android-validation-komensky/master/graphics/demo.png "user input validations")
 
 Features:
 
@@ -46,3 +49,18 @@ To start and stop live validation, simply call:
 	FormValidator.startLiveValidation(this, new SimpleErrorPopupCallback(this));
 	FormValidator.stopLiveValidation(this);
 
+Validations supported out of the box:
+ - NotEmpty
+ - Length
+ - MaxLength
+ - MinLength
+ - MaxValue
+ - MaxNumberValue
+ - MinValue
+ - MinNumberValue
+ - RegExp
+ - DateInFuture
+ - DateNoWeekend
+ - Custom
+
+And you can always create your own validation. 
