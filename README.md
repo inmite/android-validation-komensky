@@ -64,3 +64,11 @@ Validations supported out of the box:
  - Custom
 
 And you can always create your own validation. 
+
+## Why 'Komensky'?
+
+<img src="http://upload.wikimedia.org/wikipedia/commons/c/ce/Johan_amos_comenius_1592-1671.jpg" width="70"  align="right"/>
+
+[Jan Ámos Komenský](http://en.wikipedia.org/wiki/John_Amos_Comenius)  was a famous Czech educator, father of modern education methods.&nbsp;
+Teachers tend to correct you, just like this library. You won't miss any errors in the user input.
+
