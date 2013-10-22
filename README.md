@@ -11,14 +11,15 @@ Features:
 
 ## How to include it in your project:
 
-~~With Maven:~~ (not yet, it will get in central soon)
-
-    <dependency>
-		<groupId>eu.inmite.android.lib</groupId>
-		<artifactId>android-validation-komensky</artifactId>
-		<version>0.9.2</version>
-		<type>jar</type>
-    </dependency>
+~~With Maven:~~ (not yet, it will get in Central soon)
+```xml
+<dependency>
+	<groupId>eu.inmite.android.lib</groupId>
+	<artifactId>android-validation-komensky</artifactId>
+	<version>0.9.2</version>
+	<type>jar</type>
+</dependency>
+```
 
 Or:
 
