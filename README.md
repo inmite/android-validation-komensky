@@ -1,15 +1,13 @@
 # ValidationKomensky for Android
-Library for validating user input easily.
-
-Just annotate view fields with validation annotations and you are ready to validate user input with one line of code.
+A simple library for validating user input in forms using annotations.
 
 ![alt text](https://raw.github.com/inmite/android-validation-komensky/master/graphics/demo.png "user input validations")
 
 Features:
 
- - Validate all views at once and show feedback to user. With one line of code.
- - Live validation - check user input as he moves between views with immediate feedback.
- - Extensible library - you can add your own validations or adapters for custom views.
+ - Validate **all views at once** and show feedback to user. _With one line of code._
+ - **Live validation** - check user input as he moves between views with immediate feedback.
+ - **Extensible** library - you can add your own validations or adapters for custom views.
 
 ## How to include it in your project:
 
@@ -29,25 +27,29 @@ Or:
 
 ## How to validate
 
-First, annotate your views:
-
-
-	@NotEmpty(messageId = R.string.validation_name, order = 1)
-	private EditText mEditName;
-
-	@DateInFuture(messageId = R.string.validation_date)
-    private TextView mTxtDate;
+First, annotate your views like this:
+```java
+@NotEmpty(messageId = R.string.validation_name)
+private EditText mNameEditText;
+```	
 
 Now you are ready to:
+```java
+FormValidator.validate(this, new SimpleErrorPopupCallback(this));
+```
 
-    FormValidator.validate(this, new SimpleErrorPopupCallback(this));
+You will receive collection of all failed validations in a callback and you can present them to the user as you want.
+Or simply use prepared callbacks (like `SimpleErrorPopupCallback`).
 
-You will receive collection of all failed validations in a callback and you can present them to the user as you want or simply use prepared callbacks (like SimpleErrorPopupCallback).
+### Live validation
 
 To start and stop live validation, simply call:
+```java
+FormValidator.startLiveValidation(this, new SimpleErrorPopupCallback(this));
+FormValidator.stopLiveValidation(this);
+```	
 
-	FormValidator.startLiveValidation(this, new SimpleErrorPopupCallback(this));
-	FormValidator.stopLiveValidation(this);
+### List of all supported validation annotations
 
 Validations supported out of the box:
  - NotEmpty
@@ -63,7 +65,9 @@ Validations supported out of the box:
  - DateNoWeekend
  - Custom
 
-And you can always create your own validation. 
+### How to create your own validation
+
+TODO
 
 ## Why 'Komensky'?
 
