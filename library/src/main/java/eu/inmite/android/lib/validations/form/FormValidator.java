@@ -238,7 +238,7 @@ public class FormValidator {
 					return lhs.order < rhs.order ? -1 : (lhs.order == rhs.order ? 0 : 1);
 				}
 			});
-			callback.validationComplete(result, failedValidations);
+			callback.validationComplete(result, Collections.unmodifiableList(failedValidations));
 		}
 		return result;
 	}

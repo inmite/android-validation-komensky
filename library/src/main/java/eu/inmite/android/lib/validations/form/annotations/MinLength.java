@@ -24,6 +24,9 @@ import java.lang.annotation.Target;
 @Retention(value= RetentionPolicy.RUNTIME)
 public @interface MinLength {
 
+	/**
+	 * minimal length
+	 */
 	int value();
 	ComparingPolicy policy() default ComparingPolicy.INCLUSIVE;
 	int messageId() default 0;

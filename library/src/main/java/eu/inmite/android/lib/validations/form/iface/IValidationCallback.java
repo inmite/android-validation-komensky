@@ -13,7 +13,7 @@ public interface IValidationCallback {
 	 * Validation completed callback.
 	 *
 	 * @param result true if validation passed
-	 * @param failedValidations collections of all failed validations, this collection should never be null
+	 * @param failedValidations collections of all failed validations, this collection should never be null and is immutable
 	 */
 	void validationComplete(boolean result, List<FormValidator.ValidationFail> failedValidations);
 }

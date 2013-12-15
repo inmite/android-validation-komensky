@@ -31,8 +31,9 @@ Or:
 First, annotate your views like this:
 ```java
 @NotEmpty(messageId = R.string.validation_name)
+@MinLength(value = 3, messageId = R.string.validation_name_length, order = 2)
 private EditText mNameEditText;
-```	
+```
 
 Now you are ready to:
 ```java
@@ -48,7 +49,7 @@ To start and stop live validation, simply call:
 ```java
 FormValidator.startLiveValidation(this, new SimpleErrorPopupCallback(this));
 FormValidator.stopLiveValidation(this);
-```	
+```
 
 ### List of all supported validation annotations
 
