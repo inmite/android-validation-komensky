@@ -17,6 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Validate for minimal length of input string.
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)

@@ -19,6 +19,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Allows you to specify custom validator class, see {@link eu.inmite.android.lib.validations.form.iface.IValidator}
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)

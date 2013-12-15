@@ -18,6 +18,9 @@ import java.lang.annotation.Target;
 import java.text.DateFormat;
 
 /**
+ * Validate input as date that is not on weekend. <br/>
+ * {@link java.text.DateFormat} is used to parse input string. To specify the input format, set {@link #datePattern()} or {@link #dateStyle()}.
+ *
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)

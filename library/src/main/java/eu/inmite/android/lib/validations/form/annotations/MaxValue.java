@@ -17,6 +17,8 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Parse input string as {@link long} and validate it for maximum value. <br/>
+ * For inputs with floating point, see {@link eu.inmite.android.lib.validations.form.annotations.MaxNumberValue}
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)

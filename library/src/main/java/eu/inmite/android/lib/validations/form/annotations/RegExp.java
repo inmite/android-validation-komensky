@@ -6,6 +6,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Validate input string with specified regular expression.
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)
@@ -13,6 +14,7 @@ import java.lang.annotation.Target;
 public @interface RegExp {
 
 	// for patters se android.Util.Patterns
+
 
 	public static final String EMAIL =
 			"[a-zA-Z0-9\\+\\.\\_\\%\\-\\+]{1,256}" +
@@ -23,6 +25,9 @@ public @interface RegExp {
 			"[a-zA-Z0-9][a-zA-Z0-9\\-]{0,25}" +
 			")+";
 
+	/**
+	 * regular expression
+	 */
 	String value();
 	int messageId() default 0;
 	int order() default 1000;

@@ -17,6 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Parse input string as {@link java.math.BigDecimal} and validate it for minimum value.
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)
@@ -24,7 +25,8 @@ import java.lang.annotation.Target;
 public @interface MinNumberValue {
 
 	/**
-	 * number as string, e.g. "100.3"
+	 * Number as string, e.g. "100.3" <br/>
+	 * This value will be used in {@link java.math.BigDecimal} constructor
 	 */
 	String value();
 	ComparingPolicy policy() default ComparingPolicy.INCLUSIVE;

@@ -17,12 +17,17 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Parse input string as {@link java.math.BigDecimal} and validate it for maximum value.
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)
 @Retention(value= RetentionPolicy.RUNTIME)
 public @interface MaxNumberValue {
 
+	/**
+	 * Number as string, e.g. "100.3" <br/>
+	 * This value will be used in {@link java.math.BigDecimal} constructor
+	 */
 	String value();
 	ComparingPolicy policy() default ComparingPolicy.INCLUSIVE;
 	int messageId() default 0;

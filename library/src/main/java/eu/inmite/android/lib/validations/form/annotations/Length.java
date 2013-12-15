@@ -16,6 +16,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+// TODO somebody should implement this validation :)
+
 /**
  * @author Tomas Vondracek
  */

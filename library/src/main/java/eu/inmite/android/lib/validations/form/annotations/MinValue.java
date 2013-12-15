@@ -17,6 +17,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Parse input string as {@link long} and validate it for minimum value. <br/>
+ * For inputs with floating point, see {@link eu.inmite.android.lib.validations.form.annotations.MinNumberValue}
+ *
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)

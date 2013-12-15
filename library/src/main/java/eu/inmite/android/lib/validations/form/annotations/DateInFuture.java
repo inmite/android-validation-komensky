@@ -7,6 +7,8 @@ import java.lang.annotation.Target;
 import java.text.DateFormat;
 
 /**
+ * Validate input as a date that should be in future. <br/>
+ * {@link java.text.DateFormat} is used to parse input string. To specify the input format, set {@link #datePattern()} or {@link #dateStyle()}.
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)

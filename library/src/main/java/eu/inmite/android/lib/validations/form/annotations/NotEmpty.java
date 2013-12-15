@@ -17,6 +17,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
+ * Validate input string that it's not empty.
  * @author Tomas Vondracek
  */
 @Target(value= ElementType.FIELD)
