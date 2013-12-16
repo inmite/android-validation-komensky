@@ -54,18 +54,57 @@ FormValidator.stopLiveValidation(this);
 ### List of all supported validation annotations
 
 Validations supported out of the box:
- - NotEmpty
- - Length
- - MaxLength
- - MinLength
- - MaxValue
- - MaxNumberValue
- - MinValue
- - MinNumberValue
- - RegExp
- - DateInFuture
- - DateNoWeekend
- - Custom
+ - [NotEmpty](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/NotEmpty.java)
+
+```java
+@NotEmpty(messageId = R.string.validation_name, order = 1)
+private EditText mNameEditText;
+```
+ - [MaxLength](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/MaxLength.java)
+ - [MinLength](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/MinLength.java)
+
+```java
+@MinLength(value = 1, messageId = R.string.validation_participants, order = 2)
+private EditText mNameEditText;
+```
+ - [MaxValue](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/MaxValue.java)
+ - [MinValue](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/MinValue.java)
+
+```java
+@MinValue(value = 2L, messageId = R.string.validation_name_length)
+private EditText mEditNumberOfParticipants;
+```
+ - [MaxNumberValue](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/MaxNumber.java)
+ - [MinNumberValue](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/MinNumberValue.java)
+
+```java
+@MinNumberValue(value = "5.5", messageId = R.string.validation_name_length)
+private EditText mEditPotentialOfHydrogen;
+```
+ - [RegExp](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/RegExp.java)
+
+```java
+@RegExp(value = EMAIL, messageId = R.string.validation_valid_email)
+private EditText mEditEmail;
+```
+ - [DateInFuture](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/DateInFuture.java)
+
+```java
+@DateInFuture(messageId = R.string.validation_date)
+private TextView mTxtDate;
+```
+ - [DateNoWeekend](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/DateNoWeekend.java)
+
+```java
+@DateNoWeekend(messageId = R.string.validation_date_weekend)
+private TextView mTxtDate;
+```
+ - [Custom](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/Custom.java)
+
+```java
+@Custom(value = MyVeryOwnValidator.class, messageId = R.string.validation_custom)
+private EditText mNameEditText;
+```
 
 ### How to create your own validation
 
