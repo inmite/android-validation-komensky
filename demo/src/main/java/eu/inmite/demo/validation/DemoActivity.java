@@ -11,10 +11,7 @@ import android.view.View;
 import android.widget.*;
 import eu.inmite.android.lib.dialogs.SimpleDialogFragment;
 import eu.inmite.android.lib.validations.form.FormValidator;
-import eu.inmite.android.lib.validations.form.annotations.DateInFuture;
-import eu.inmite.android.lib.validations.form.annotations.MinValue;
-import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
-import eu.inmite.android.lib.validations.form.annotations.RegExp;
+import eu.inmite.android.lib.validations.form.annotations.*;
 import eu.inmite.android.lib.validations.form.callback.SimpleErrorPopupCallback;
 
 import java.text.DateFormat;
@@ -30,6 +27,7 @@ import static eu.inmite.android.lib.validations.form.annotations.RegExp.EMAIL;
 public class DemoActivity extends FragmentActivity implements DatePickerDialog.OnDateSetListener {
 
 	@NotEmpty(messageId = R.string.validation_name, order = 1)
+	@MinLength(value = 3, messageId = R.string.validation_name_length, order = 1)
 	private EditText mEditName;
 
 	@NotEmpty

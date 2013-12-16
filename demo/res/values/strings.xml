@@ -2,6 +2,7 @@
 <resources>
 	<string name="app_name">ValidationDemo</string>
 	<string name="validation_name">Please, enter the name</string>
+	<string name="validation_name_length">Please, enter the name with at least 3 characters</string>
 	<string name="validation_participants">Please, enter the number of participants</string>
 	<string name="validation_valid_email">Please, enter valid email address</string>
 	<string name="validation_date">Date must be in future</string>
