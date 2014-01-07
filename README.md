@@ -106,10 +106,6 @@ private TextView mTxtDate;
 private EditText mNameEditText;
 ```
 
-### How to create your own validation
-
-TODO
-
 ## Why 'Komensky'?
 
 <img src="http://upload.wikimedia.org/wikipedia/commons/c/ce/Johan_amos_comenius_1592-1671.jpg" width="70"  align="right"/>
