@@ -11,7 +11,7 @@ Features:
 
 ## How to include it in your project:
 
-~~With Maven:~~ (not yet, it will get in Central soon)
+With Maven:
 ```xml
 <dependency>
 	<groupId>eu.inmite.android.lib</groupId>
