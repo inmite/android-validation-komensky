@@ -6,11 +6,11 @@
 		<groupId>eu.inmite.android.lib</groupId>
 		<artifactId>android-validation-komensky-parent</artifactId>
 		<relativePath>../pom.xml</relativePath>
-		<version>0.9.2-SNAPSHOT</version>
+		<version>0.9.2</version>
 	</parent>
 
 	<artifactId>android-validation-komensky</artifactId>
-	<version>0.9.2-SNAPSHOT</version>
+	<version>0.9.2</version>
 	<packaging>jar</packaging>
 
 	<name>Android ValidationKomensky</name>
