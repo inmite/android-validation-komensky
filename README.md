@@ -11,6 +11,11 @@ Features:
 
 ## How to include it in your project:
 
+With Gradle:
+```groovy
+compile 'eu.inmite.android.lib:android-validation-komensky:0.9.2'
+```
+
 With Maven:
 ```xml
 <dependency>
@@ -21,7 +26,7 @@ With Maven:
 </dependency>
 ```
 
-Or:
+Manually:
 
  - clone the project
  - add it as library project in your IDE
