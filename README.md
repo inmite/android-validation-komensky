@@ -118,3 +118,4 @@ private EditText mNameEditText;
 [Jan Ámos Komenský](http://en.wikipedia.org/wiki/John_Amos_Comenius)  was a famous Czech educator, father of modern education methods.&nbsp;
 Teachers tend to correct you, just like this library. You won't miss any errors in the user input.
 
+See [**our other Czech personalities**](http://inmite.github.io) who help with [#AndroidDev](https://plus.google.com/s/%23AndroidDev).
