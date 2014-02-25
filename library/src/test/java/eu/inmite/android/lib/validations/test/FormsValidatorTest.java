@@ -12,6 +12,7 @@
 package eu.inmite.android.lib.validations.test;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -21,6 +22,7 @@ import eu.inmite.android.lib.validations.form.annotations.MinLength;
 import eu.inmite.android.lib.validations.form.annotations.MinValue;
 import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
 import eu.inmite.android.lib.validations.form.validators.CzechBankAccountNumberValidator;
+
 import org.junit.Assert;
 import org.junit.Ignore;
 import org.junit.Test;
@@ -143,5 +145,17 @@ public class FormsValidatorTest {
 
 		boolean result = FormValidator.validate(Robolectric.application, model, null);
 		Assert.assertFalse(result);
+	}
+	
+	@Test
+	public void invalidValueOnInvisibleFieldShouldPass() {
+		SimpleModelUnderValidation model = new SimpleModelUnderValidation(Robolectric.application);
+		model.txtAmount.setText("");
+		model.editMessage.setText("0123456789");
+		
+		model.txtAmount.setVisibility(View.GONE);
+		
+		boolean result = FormValidator.validate(Robolectric.application, model, null);
+		Assert.assertTrue(result);
 	}
 }
