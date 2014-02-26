@@ -222,6 +222,11 @@ public class FormValidator {
 		for (Map.Entry<View, FieldInfo> entry : infoMap.entrySet()) {
 			final FieldInfo fieldInfo = entry.getValue();
 			final View view = entry.getKey();
+			
+			if (view.getVisibility() == View.GONE) {
+				// don't run validation on views that are not visible
+				continue;
+			}
 
 			ValidationFail fieldResult = performFieldValidations(context, target, fieldInfo, view);
 			if (fieldResult != null) {
