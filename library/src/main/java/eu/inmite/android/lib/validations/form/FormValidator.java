@@ -16,6 +16,15 @@ import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewTreeObserver;
+
+import java.lang.annotation.Annotation;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import eu.inmite.android.lib.validations.exception.FormsValidationException;
 import eu.inmite.android.lib.validations.exception.NoFieldAdapterException;
 import eu.inmite.android.lib.validations.form.annotations.Condition;
@@ -24,9 +33,6 @@ import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
 import eu.inmite.android.lib.validations.form.iface.IValidationCallback;
 import eu.inmite.android.lib.validations.form.iface.IValidator;
 import eu.inmite.android.lib.validations.form.validators.ValidatorFactory;
-
-import java.lang.annotation.Annotation;
-import java.util.*;
 
 /**
  * <p>
@@ -216,13 +222,14 @@ public class FormValidator {
 		}
 
 		final List<ValidationFail> failedValidations = new ArrayList<ValidationFail>();
+		final List<View> passedValidations = new ArrayList<View>();
 		boolean result = true;
 
 		final Map<View, FieldInfo> infoMap = FieldFinder.getFieldsForTarget(target);
 		for (Map.Entry<View, FieldInfo> entry : infoMap.entrySet()) {
 			final FieldInfo fieldInfo = entry.getValue();
 			final View view = entry.getKey();
-			
+
 			if (view.getVisibility() == View.GONE || view.getVisibility() == View.INVISIBLE) {
 				// don't run validation on views that are not visible
 				continue;
@@ -232,7 +239,9 @@ public class FormValidator {
 			if (fieldResult != null) {
 				failedValidations.add(fieldResult);
 				result = false;
-			} // else validation passed
+			} else {
+                passedValidations.add(view);
+            }
 
 		}
 
@@ -243,10 +252,45 @@ public class FormValidator {
 					return lhs.order < rhs.order ? -1 : (lhs.order == rhs.order ? 0 : 1);
 				}
 			});
-			callback.validationComplete(result, Collections.unmodifiableList(failedValidations));
+			callback.validationComplete(result, Collections.unmodifiableList(failedValidations), Collections.unmodifiableList(passedValidations));
 		}
 		return result;
 	}
+
+    ///////////////////////////////////////////////////////////////////////////
+    // Single view validations
+    ///////////////////////////////////////////////////////////////////////////
+
+    public static boolean validate(Activity activity, View targetView, IValidationCallback callback) {
+        return validate(activity, activity.getWindow().getDecorView(), targetView, callback);
+    }
+
+    public static boolean validate(Fragment fragment, View targetView, IValidationCallback callback) {
+        return validate(fragment, fragment.getView(), targetView, callback);
+    }
+
+    public static boolean validate(Object target, View formContainer, View targetView, IValidationCallback callback) {
+        return validate(target, formContainer, targetView, FieldFinder.getFieldsForTarget(target), callback);
+    }
+
+    private static boolean validate(Object target, View formContainer, View targetView, Map<View, FieldInfo> infoMap, IValidationCallback callback) {
+        boolean overallResult = false;
+        final FieldInfo info = infoMap.get(targetView);
+        if (info != null) {
+            final ValidationFail validationFail = performFieldValidations(formContainer.getContext(), target, info, targetView);
+
+            if (validationFail != null && callback != null) {
+                // we have a failed validation
+                final List<View> noPassedValidations = Collections.emptyList();
+                callback.validationComplete(false, Collections.singletonList(validationFail), noPassedValidations);
+            } else if (callback != null) {
+                final List<ValidationFail> noFailedValidations = Collections.emptyList();
+                overallResult = validate(formContainer.getContext(), target, null);
+                callback.validationComplete(overallResult, noFailedValidations, Collections.singletonList(targetView));
+            }
+        }
+        return overallResult;
+    }
 
 	/**
 	 * perform all validations on single field
@@ -378,16 +422,8 @@ public class FormValidator {
 		public void onGlobalFocusChanged(View oldFocus, View newFocus) {
 			// dunno why, but oldFocus is absolutely wrong
 			if (this.currentlyFocusedView != null && this.currentlyFocusedView != newFocus) {
-				FieldInfo info = this.infoMap.get(this.currentlyFocusedView);
-				if (info != null) {
-					final ValidationFail validationFail = performFieldValidations(this.formContainer.getContext(), target, info, this.currentlyFocusedView);
-
-					if (validationFail != null && callback != null) {
-						// we have a failed validation
-						this.callback.validationComplete(false, Collections.singletonList(validationFail));
-					}
-				}
-			}
+                validate(this.target, this.formContainer, this.currentlyFocusedView, this.infoMap, this.callback);
+            }
 
 			this.currentlyFocusedView = newFocus;
 		}
