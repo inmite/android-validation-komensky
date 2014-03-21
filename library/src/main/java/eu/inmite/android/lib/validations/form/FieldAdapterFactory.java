@@ -1,6 +1,7 @@
 package eu.inmite.android.lib.validations.form;
 
 import android.view.View;
+import android.widget.CompoundButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -50,6 +51,11 @@ public class FieldAdapterFactory {
 			adapter = sJoinedAdapter;
 		} else if (sExternalAdapters != null && sExternalAdapters.containsKey(view.getClass())) {
 			adapter = sExternalAdapters.get(view.getClass());
+        } else if (view instanceof CompoundButton) {
+            if (sCompoundViewAdapter == null) {
+                sCompoundViewAdapter = new CompoundAdapter();
+            }
+            adapter = sCompoundViewAdapter;
         } else if (view instanceof TextView) {
 			if (sTextViewAdapter == null) {
 				sTextViewAdapter = new TextViewAdapter();
