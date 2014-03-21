@@ -3,15 +3,17 @@ package eu.inmite.android.lib.validations.form;
 import android.view.View;
 import android.widget.Spinner;
 import android.widget.TextView;
+
+import java.lang.annotation.Annotation;
+import java.util.HashMap;
+import java.util.Map;
+
+import eu.inmite.android.lib.validations.form.adapters.CompoundAdapter;
 import eu.inmite.android.lib.validations.form.adapters.JoinedAdapter;
 import eu.inmite.android.lib.validations.form.adapters.SpinnerAdapter;
 import eu.inmite.android.lib.validations.form.adapters.TextViewAdapter;
 import eu.inmite.android.lib.validations.form.annotations.Joined;
 import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
-
-import java.lang.annotation.Annotation;
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * Created adapters for views with validation.
@@ -23,6 +25,7 @@ public class FieldAdapterFactory {
 	private static JoinedAdapter sJoinedAdapter;
 	private static TextViewAdapter sTextViewAdapter;
 	private static SpinnerAdapter sSpinnerViewAdapter;
+	private static CompoundAdapter sCompoundViewAdapter;
 
 	private static Map<Class<? extends View>, IFieldAdapter<? extends View,?>> sExternalAdapters;
 
@@ -45,7 +48,9 @@ public class FieldAdapterFactory {
 				sJoinedAdapter = new JoinedAdapter();
 			}
 			adapter = sJoinedAdapter;
-		} else if (view instanceof TextView) {
+		} else if (sExternalAdapters != null && sExternalAdapters.containsKey(view.getClass())) {
+			adapter = sExternalAdapters.get(view.getClass());
+        } else if (view instanceof TextView) {
 			if (sTextViewAdapter == null) {
 				sTextViewAdapter = new TextViewAdapter();
 			}
@@ -55,8 +60,6 @@ public class FieldAdapterFactory {
 				sSpinnerViewAdapter = new SpinnerAdapter();
 			}
 			adapter = sSpinnerViewAdapter;
-		} else if (sExternalAdapters != null && sExternalAdapters.containsKey(view.getClass())) {
-			adapter = sExternalAdapters.get(view.getClass());
 		} else {
 			adapter = null;
 		}
