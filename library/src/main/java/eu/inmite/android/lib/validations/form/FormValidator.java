@@ -278,6 +278,7 @@ public class FormValidator {
         final FieldInfo info = infoMap.get(targetView);
         if (info != null) {
             final ValidationFail validationFail = performFieldValidations(formContainer.getContext(), target, info, targetView);
+            overallResult = validationFail == null;
 
             if (validationFail != null && callback != null) {
                 // we have a failed validation
