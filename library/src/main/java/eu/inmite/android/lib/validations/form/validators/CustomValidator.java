@@ -19,6 +19,8 @@ import eu.inmite.android.lib.validations.form.iface.IValidator;
 
 import java.lang.annotation.Annotation;
 
+import android.content.Context;
+
 /**
  * @author Tomas Vondracek
  */
@@ -50,4 +52,28 @@ public class CustomValidator extends BaseValidator<Object> {
 		}
 	}
 
+	@Override
+	public String getMessage(Context context, Annotation annotation, Object input) {
+		if (annotation instanceof Joined) {
+			try {
+				IValidator validator = ((Joined) annotation).validator().newInstance();
+				return validator.getMessage(context, annotation, input);
+			} catch (InstantiationException e) {
+				throw new FormsValidationException(e);
+			} catch (IllegalAccessException e) {
+				throw new FormsValidationException(e);
+			}
+		} else if (annotation instanceof Custom) {
+			try {
+				IValidator validator = ((Custom) annotation).value().newInstance();
+				return validator.getMessage(context, annotation, input);
+			} catch (InstantiationException e) {
+				throw new FormsValidationException(e);
+			} catch (IllegalAccessException e) {
+				throw new FormsValidationException(e);
+			}
+		} else {
+			throw new FormsValidationException("unknown annotation " + annotation);
+		}
+	}
 }
