@@ -28,7 +28,7 @@
 	<groupId>eu.inmite.android.lib</groupId>
 	<artifactId>android-validation-komensky-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>0.9.4-SNAPSHOT</version>
+	<version>0.9.3-SNAPSHOT</version>
 
 	<name>Android ValidationKomensky</name>
 	<description>Android library for validating user input easily</description>
