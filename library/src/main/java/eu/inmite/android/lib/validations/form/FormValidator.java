@@ -223,7 +223,7 @@ public class FormValidator {
 			final FieldInfo fieldInfo = entry.getValue();
 			final View view = entry.getKey();
 			
-			if (view.getVisibility() == View.GONE) {
+			if (view.getVisibility() == View.GONE || view.getVisibility() == View.INVISIBLE) {
 				// don't run validation on views that are not visible
 				continue;
 			}
