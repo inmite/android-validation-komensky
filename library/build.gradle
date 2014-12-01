@@ -1,4 +1,8 @@
-apply plugin: 'android-library'
+apply plugin: 'com.android.library'
+
+repositories {
+    mavenCentral()
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -8,17 +12,8 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
+}
 
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src/main/java']
-            res.srcDirs = ['res']
-        }
-    }
-
-    dependencies {
-        compile 'com.android.support:support-v4:20.+'
-    }
-
+dependencies {
+    compile 'com.android.support:support-v4:20.+'
 }

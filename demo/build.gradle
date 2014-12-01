@@ -1,4 +1,11 @@
-apply plugin: 'android'
+apply plugin: 'com.android.application'
+
+repositories {
+    mavenCentral()
+    maven {
+        url "https://oss.sonatype.org/content/repositories/snapshots/"
+    }
+}
 
 android {
     compileSdkVersion rootProject.ext.compileSdkVersion
@@ -8,18 +15,9 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
+}
 
-    sourceSets {
-        main {
-            manifest.srcFile 'AndroidManifest.xml'
-            java.srcDirs = ['src/main/java']
-            res.srcDirs = ['res']
-        }
-    }
-
-    dependencies {
-        compile project(':library')
-        compile 'eu.inmite.android.lib:android-styled-dialogs:1.1.2@aar'
-    }
-
+dependencies {
+    compile project(':library')
+    compile 'eu.inmite.android.lib:android-styled-dialogs:1.1.2@aar'
 }
