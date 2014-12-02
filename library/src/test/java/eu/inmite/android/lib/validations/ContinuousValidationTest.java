@@ -9,15 +9,14 @@
  * before the Municipal Court of Prague.
  */
 
-package eu.inmite.android.lib.validations.test;
+package eu.inmite.android.lib.validations;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import eu.inmite.android.lib.validations.form.FormValidator;
-import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
-import eu.inmite.android.lib.validations.form.iface.IValidationCallback;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -25,6 +24,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.List;
+
+import eu.inmite.android.lib.validations.form.FormValidator;
+import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
+import eu.inmite.android.lib.validations.form.iface.IValidationCallback;
 
 import static org.junit.Assert.assertTrue;
 
@@ -68,7 +71,7 @@ public class ContinuousValidationTest {
 
 		FormValidator.startLiveValidation(model, model.layout, new IValidationCallback() {
 			@Override
-			public void validationComplete(boolean result, List<FormValidator.ValidationFail> failedValidations) {
+			public void validationComplete(boolean result, List<FormValidator.ValidationFail> failedValidations, List<View> passed) {
 			}
 		});
 		boolean stopped = FormValidator.stopLiveValidation(model);
