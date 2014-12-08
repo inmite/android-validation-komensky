@@ -69,7 +69,7 @@ public class RegExpValidatorTest {
 	public void invalidInputShouldNotPass() throws Exception {
 		ModelWithValidation model = initModel();
 		model.txtNotNumber.setText("123");
-		model.editNumber.setText("¡No pasarán!");
+		model.editNumber.setText("!No pasaran!");
 
 		final int[] failCount = new int[1];
 		final boolean valid = FormValidator.validate(Robolectric.application, model, new IValidationCallback() {

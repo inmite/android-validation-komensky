@@ -13,27 +13,17 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
     }
-    sourceSets {
-        androidTest {
-            setRoot('src/test')
-        }
-    }
-
 }
 
-apply plugin: 'robolectric'
-robolectric {
-    include '**/*Test.class'
-    exclude '**/espresso/**/*.class'
-}
+apply plugin: 'android-unit-test'
 
 dependencies {
     compile 'com.android.support:support-v4:19.+'
     // Robolectric tests
-    androidTestCompile 'junit:junit:4.11'
-    androidTestCompile 'org.mockito:mockito-core:1.9.5'
-    androidTestCompile 'com.squareup:fest-android:1.0.+'
-    androidTestCompile('org.robolectric:robolectric:2.4') {
+    testCompile 'junit:junit:4.11'
+    testCompile 'org.mockito:mockito-core:1.9.5'
+    testCompile 'com.squareup:fest-android:1.0.+'
+    testCompile('org.robolectric:robolectric:2.4') {
         exclude module: 'classworlds'
         exclude module: 'commons-logging'
         exclude module: 'httpclient'
