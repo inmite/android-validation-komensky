@@ -1,12 +1,11 @@
-package eu.inmite.android.lib.validations.test;
+package eu.inmite.android.lib.validations;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import eu.inmite.android.lib.validations.form.FormValidator;
-import eu.inmite.android.lib.validations.form.annotations.RegExp;
-import eu.inmite.android.lib.validations.form.iface.IValidationCallback;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
@@ -14,6 +13,10 @@ import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 import java.util.List;
+
+import eu.inmite.android.lib.validations.form.FormValidator;
+import eu.inmite.android.lib.validations.form.annotations.RegExp;
+import eu.inmite.android.lib.validations.form.iface.IValidationCallback;
 
 import static org.junit.Assert.*;
 
@@ -66,12 +69,12 @@ public class RegExpValidatorTest {
 	public void invalidInputShouldNotPass() throws Exception {
 		ModelWithValidation model = initModel();
 		model.txtNotNumber.setText("123");
-		model.editNumber.setText("¡No pasarán!");
+		model.editNumber.setText("!No pasaran!");
 
 		final int[] failCount = new int[1];
 		final boolean valid = FormValidator.validate(Robolectric.application, model, new IValidationCallback() {
 			@Override
-			public void validationComplete(boolean result, List<FormValidator.ValidationFail> failedValidations) {
+			public void validationComplete(boolean result, List<FormValidator.ValidationFail> failedValidations, List<View> passed) {
 				failCount[0] = failedValidations.size();
 			}
 		});

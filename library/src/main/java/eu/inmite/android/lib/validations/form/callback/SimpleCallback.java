@@ -1,10 +1,12 @@
 package eu.inmite.android.lib.validations.form.callback;
 
 import android.content.Context;
-import eu.inmite.android.lib.validations.form.FormValidator;
-import eu.inmite.android.lib.validations.form.iface.IValidationCallback;
+import android.view.View;
 
 import java.util.List;
+
+import eu.inmite.android.lib.validations.form.FormValidator;
+import eu.inmite.android.lib.validations.form.iface.IValidationCallback;
 
 /**
  * @author Tomas Vondracek
@@ -19,8 +21,8 @@ public abstract class SimpleCallback implements IValidationCallback {
 		mContext = context;
 	}
 
-	@Override
-	public void validationComplete(boolean result, List<FormValidator.ValidationFail> failedValidations) {
+    @Override
+    public void validationComplete(boolean result, List<FormValidator.ValidationFail> failedValidations, List<View> passedValidations) {
 		if (failedValidations.size() > 0) {
 			FormValidator.ValidationFail firstFail = failedValidations.get(0);
 			if (mFocusFirstFail) {

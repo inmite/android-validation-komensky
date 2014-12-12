@@ -1,8 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-	<style name="Theme.ValidationDemo" parent="Theme.Parent">
-		<item name="sdlDialogStyle">@style/DialogStyleDark</item>
-	</style>
-
-	<style name="Theme.Parent" parent="android:Theme"/>
-</resources>

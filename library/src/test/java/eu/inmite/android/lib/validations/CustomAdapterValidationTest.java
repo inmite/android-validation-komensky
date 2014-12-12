@@ -1,4 +1,4 @@
-package eu.inmite.android.lib.validations.test;
+package eu.inmite.android.lib.validations;
 
 import android.content.Context;
 import android.view.View;

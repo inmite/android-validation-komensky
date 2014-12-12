@@ -9,21 +9,24 @@
  * before the Municipal Court of Prague.
  */
 
-package eu.inmite.android.lib.validations.test;
+package eu.inmite.android.lib.validations;
 
 import android.content.Context;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import eu.inmite.android.lib.validations.form.FormValidator;
-import eu.inmite.android.lib.validations.form.annotations.*;
-import eu.inmite.android.lib.validations.form.iface.ICondition;
+
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import eu.inmite.android.lib.validations.form.FormValidator;
+import eu.inmite.android.lib.validations.form.annotations.Condition;
+import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
+import eu.inmite.android.lib.validations.form.iface.ICondition;
 
 /**
  * @author Tomas Vondracek
