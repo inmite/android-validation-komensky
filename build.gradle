@@ -16,4 +16,7 @@ ext {
     buildToolsVersion = '21.1.1'
     minSdkVersion = 8
     targetSdkVersion = 21
+
+    version = VERSION_NAME
+    group = GROUP
 }

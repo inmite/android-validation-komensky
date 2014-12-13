@@ -12,6 +12,9 @@ android {
         applicationId 'eu.inmite.demo.validation'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
+
+        versionName rootProject.VERSION_NAME
+        versionCode Integer.parseInt(rootProject.VERSION_CODE)
     }
 }
 
