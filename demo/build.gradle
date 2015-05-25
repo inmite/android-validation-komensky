@@ -16,6 +16,17 @@ android {
         versionName rootProject.VERSION_NAME
         versionCode Integer.parseInt(rootProject.VERSION_CODE)
     }
+
+    buildTypes {
+        release {
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+            signingConfig signingConfigs.debug
+        }
+        debug {
+            debuggable true
+        }
+    }
 }
 
 dependencies {
@@ -25,3 +36,4 @@ dependencies {
     compile 'com.android.support:appcompat-v7:21.0.+'
     compile 'com.android.support:gridlayout-v7:21.0.+'
 }
+

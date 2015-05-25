@@ -111,6 +111,21 @@ private TextView mTxtDate;
 private EditText mNameEditText;
 ```
 
+## Proguard
+
+Should you need to use the proguard, copy these rules:
+
+```proguard
+-keepattributes *Annotation*
+-keep class eu.inmite.android.lib.validations.form.annotations.** { *; }
+-keep class * implements eu.inmite.android.lib.validations.form.iface.ICondition
+-keep class * implements eu.inmite.android.lib.validations.form.iface.IValidator
+-keep class * implements eu.inmite.android.lib.validations.form.iface.IFieldAdapter
+-keepclassmembers class ** {
+	@eu.inmite.android.lib.validations.form.annotations.** *;
+}
+```
+
 ## Why 'Komensky'?
 
 <img src="http://upload.wikimedia.org/wikipedia/commons/c/ce/Johan_amos_comenius_1592-1671.jpg" width="70"  align="right"/>
