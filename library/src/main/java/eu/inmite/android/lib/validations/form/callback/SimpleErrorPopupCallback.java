@@ -2,7 +2,11 @@ package eu.inmite.android.lib.validations.form.callback;
 
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.View;
 import android.widget.TextView;
+
+import java.util.Collection;
+
 import eu.inmite.android.lib.validations.form.FormValidator;
 
 /**
@@ -39,6 +43,15 @@ public class SimpleErrorPopupCallback extends SimpleToastCallback {
 			}
 		} else {
 			super.showValidationMessage(firstFail);
+		}
+	}
+
+	@Override
+	protected void showViewIsValid(Collection<View> passedValidations) {
+		for (View view : passedValidations) {
+			if (view instanceof TextView) {
+				((TextView) view).setError(null);
+			}
 		}
 	}
 }
