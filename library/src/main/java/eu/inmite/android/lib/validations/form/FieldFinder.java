@@ -17,7 +17,7 @@ import java.util.*;
  */
 class FieldFinder {
 
-	private static final WeakHashMap<Object, Map<View, FormValidator.FieldInfo>> sCachedFieldsByTarget = new WeakHashMap<Object, Map<View, FormValidator.FieldInfo>>();
+	private static final WeakHashMap<Object, Map<View, FormValidator.FieldInfo>> sCachedFieldsByTarget = new WeakHashMap<>();
 
 	static boolean clearCache() {
 		final boolean cleaned = ! sCachedFieldsByTarget.isEmpty();
@@ -53,15 +53,16 @@ class FieldFinder {
 	/**
 	 * find fields on target to validate and prepare for their validation
 	 */
+	@SuppressWarnings("TryWithIdenticalCatches")
 	private static Map<View, FormValidator.FieldInfo> findFieldsToValidate(Object target) {
 		final Field[] fields = target.getClass().getDeclaredFields();
 		if (fields == null || fields.length == 0) {
 			return Collections.emptyMap();
 		}
 
-		final WeakHashMap<View, FormValidator.FieldInfo> infoMap = new WeakHashMap<View, FormValidator.FieldInfo>(fields.length);
+		final WeakHashMap<View, FormValidator.FieldInfo> infoMap = new WeakHashMap<>(fields.length);
 		for (Field field : fields) {
-			final List<FormValidator.ValidationInfo> infos = new ArrayList<FormValidator.ValidationInfo>();
+			final List<FormValidator.ValidationInfo> infos = new ArrayList<>();
 			final Annotation[] annotations = field.getDeclaredAnnotations();
 			if (annotations.length > 0) {
 				if (! View.class.isAssignableFrom(field.getType())) {

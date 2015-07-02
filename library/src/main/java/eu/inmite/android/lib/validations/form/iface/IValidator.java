@@ -20,7 +20,7 @@ import java.lang.annotation.Annotation;
  */
 public interface IValidator<T> {
 
-	public boolean validate(Annotation annotation, T input);
+	boolean validate(Annotation annotation, T input);
 
 	String getMessage(Context context, Annotation annotation, T input);
 

@@ -16,8 +16,8 @@ public class ValidatorFactory {
 
 	private static final int INSTANCE_CACHE_SIZE = 4;
 
-	private static final LruCache<Class<? extends IValidator>, IValidator> sCachedValidatorInstances = new LruCache<Class<? extends IValidator>, IValidator>(INSTANCE_CACHE_SIZE);
-	private static final Map<Class<? extends Annotation>, Class<? extends IValidator>> sValidators = new HashMap<Class<? extends Annotation>, Class<? extends IValidator>>();
+	private static final LruCache<Class<? extends IValidator>, IValidator> sCachedValidatorInstances = new LruCache<>(INSTANCE_CACHE_SIZE);
+	private static final Map<Class<? extends Annotation>, Class<? extends IValidator>> sValidators = new HashMap<>();
 
 	static {
 		// our default validators:

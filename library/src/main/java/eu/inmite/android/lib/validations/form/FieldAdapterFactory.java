@@ -32,7 +32,7 @@ public class FieldAdapterFactory {
 
 	static void registerAdapter(Class<? extends View> viewType, Class<? extends IFieldAdapter<? extends View,?>> adapterClazz) throws IllegalAccessException, InstantiationException {
 		if (sExternalAdapters == null) {
-			sExternalAdapters = new HashMap<Class<? extends View>, IFieldAdapter<? extends View,?>>();
+			sExternalAdapters = new HashMap<>();
 		}
 		sExternalAdapters.put(viewType, adapterClazz.newInstance());
 	}

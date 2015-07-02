@@ -24,15 +24,15 @@ public class DelayedValidatingViewTrigger {
     }
 
     public DelayedValidatingViewTrigger(Fragment fragment, View targetView, IValidationCallback callback, int delay) {
-        this.fragmentRef = new WeakReference<Fragment>(fragment);
-        this.targetViewRef = new WeakReference<View>(targetView);
-        this.callbackRef = new WeakReference<IValidationCallback>(callback);
+        this.fragmentRef = new WeakReference<>(fragment);
+        this.targetViewRef = new WeakReference<>(targetView);
+        this.callbackRef = new WeakReference<>(callback);
         this.delay = delay;
         handler = new DelayedHandler();
     }
 
     public void run() {
-        handler.removeMessages(handler.REQUEST);
+        handler.removeMessages(DelayedHandler.REQUEST);
         handler.sendEmptyMessageDelayed(DelayedHandler.REQUEST, delay);
     }
 

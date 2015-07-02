@@ -24,6 +24,7 @@ import android.content.Context;
 /**
  * @author Tomas Vondracek
  */
+@SuppressWarnings("TryWithIdenticalCatches")
 @ValidatorFor({Joined.class, Custom.class})
 public class CustomValidator extends BaseValidator<Object> {
 

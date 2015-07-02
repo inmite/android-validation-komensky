@@ -82,6 +82,7 @@ public class FormValidator {
 	 * @throws IllegalArgumentException if adapterClass is null or viewType is null
 	 * @throws FormsValidationException when there is a problem when accessing adapter class
 	 */
+	@SuppressWarnings("TryWithIdenticalCatches")
 	public static void registerViewAdapter(Class<? extends View> viewType, Class<? extends IFieldAdapter<? extends View,?>> adapterClass) {
 		if (viewType == null || adapterClass == null) {
 			throw new IllegalArgumentException("arguments must not be null");
@@ -144,7 +145,7 @@ public class FormValidator {
 		}
 
 		if (sLiveValidations == null) {
-			sLiveValidations = new HashMap<Object, ViewGlobalFocusChangeListener>();
+			sLiveValidations = new HashMap<>();
 		} else if (sLiveValidations.containsKey(target)) {
 			// validation is already running
 			return;
@@ -221,8 +222,8 @@ public class FormValidator {
 			throw new IllegalArgumentException("target cannot be null");
 		}
 
-		final List<ValidationFail> failedValidations = new ArrayList<ValidationFail>();
-		final List<View> passedValidations = new ArrayList<View>();
+		final List<ValidationFail> failedValidations = new ArrayList<>();
+		final List<View> passedValidations = new ArrayList<>();
 		boolean result = true;
 
 		final Map<View, FieldInfo> infoMap = FieldFinder.getFieldsForTarget(target);
@@ -338,7 +339,7 @@ public class FormValidator {
 		return null;
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings({"unchecked", "TryWithIdenticalCatches"})
 	private static boolean evaluateCondition(Object target, Condition conditionAnnotation) {
 		final int viewId = conditionAnnotation.viewId();
 		final View conditionView;

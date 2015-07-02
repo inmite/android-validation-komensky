@@ -5,6 +5,6 @@ package eu.inmite.android.lib.validations.form.iface;
  */
 public interface ICondition<T> {
 
-	public boolean evaluate(T input);
+	boolean evaluate(T input);
 
 }
