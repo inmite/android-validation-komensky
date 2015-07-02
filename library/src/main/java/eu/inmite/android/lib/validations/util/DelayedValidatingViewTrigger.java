@@ -47,11 +47,11 @@ public class DelayedValidatingViewTrigger {
                     // check if target fragment is not destroyed
                     Fragment fragment = fragmentRef.get();
                     if (fragment == null) return;
-                    // try validate
+                    // try validateSingleView
                     View targetView = targetViewRef.get();
                     IValidationCallback callback = callbackRef.get();
                     if (targetView != null) {
-                        FormValidator.validate(fragment, targetView, callback);
+                        FormValidator.validateSingleView(fragment, targetView, callback);
                     } else {
                         FormValidator.validate(fragment, callback);
                     }

@@ -24,7 +24,7 @@ import java.lang.annotation.Annotation;
 public class TextViewAdapter implements IFieldAdapter<TextView, String> {
 
 	@Override
-	public String getFieldValue(Annotation annotation, Object target, TextView fieldView) {
+	public String getFieldValue(Annotation annotation, TextView fieldView) {
 		return fieldView.getText().toString();
 	}
 }

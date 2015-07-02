@@ -236,7 +236,7 @@ public class FormValidator {
 				continue;
 			}
 
-			ValidationFail fieldResult = performFieldValidations(context, target, fieldInfo, view);
+			ValidationFail fieldResult = performFieldValidations(context, fieldInfo, view);
 			if (fieldResult != null) {
 				failedValidations.add(fieldResult);
 				result = false;
@@ -262,29 +262,28 @@ public class FormValidator {
     // Single view validations
     ///////////////////////////////////////////////////////////////////////////
 
-    public static boolean validate(Activity activity, View targetView, IValidationCallback callback) {
-        return validate(activity, activity.getWindow().getDecorView(), targetView, callback);
+    public static boolean validateSingleView(Activity activity, View targetView, IValidationCallback callback) {
+        return validateSingleView(activity, activity.getWindow().getDecorView(), targetView, callback);
     }
 
-    public static boolean validate(Fragment fragment, View targetView, IValidationCallback callback) {
-        return validate(fragment, fragment.getView(), targetView, callback);
+    public static boolean validateSingleView(Fragment fragment, View targetView, IValidationCallback callback) {
+        return validateSingleView(fragment, fragment.getView(), targetView, callback);
     }
 
-    public static boolean validate(Object target, View formContainer, View targetView, IValidationCallback callback) {
-        return validate(target, formContainer, targetView, FieldFinder.getFieldsForTarget(target), callback);
+    public static boolean validateSingleView(Object target, View formContainer, View targetView, IValidationCallback callback) {
+        return validateSingleView(target, formContainer, targetView, FieldFinder.getFieldsForTarget(target), callback);
     }
 
-    private static boolean validate(Object target, View formContainer, View targetView, Map<View, FieldInfo> infoMap, IValidationCallback callback) {
+    private static boolean  validateSingleView(Object target, View formContainer, View targetView, Map<View, FieldInfo> infoMap, IValidationCallback callback) {
         boolean overallResult = false;
         final FieldInfo info = infoMap.get(targetView);
         if (info != null) {
-            final ValidationFail validationFail = performFieldValidations(formContainer.getContext(), target, info, targetView);
+            final ValidationFail validationFail = performFieldValidations(formContainer.getContext(), info, targetView);
             overallResult = validationFail == null;
 
             if (validationFail != null && callback != null) {
                 // we have a failed validation
-                final List<View> noPassedValidations = Collections.emptyList();
-                callback.validationComplete(false, Collections.singletonList(validationFail), noPassedValidations);
+	            callback.validationComplete(false, Collections.singletonList(validationFail), Collections.<View>emptyList());
             } else if (callback != null) {
                 final List<ValidationFail> noFailedValidations = Collections.emptyList();
                 overallResult = validate(formContainer.getContext(), target, null);
@@ -298,11 +297,11 @@ public class FormValidator {
 	 * perform all validations on single field
 	 */
 	@SuppressWarnings("unchecked")
-	private static ValidationFail performFieldValidations(Context context, Object target, FieldInfo fieldInfo, View view) {
+	private static ValidationFail performFieldValidations(Context context, FieldInfo fieldInfo, View view) {
 		// first, we need to check if condition is not applied for all validations on field
 		if (fieldInfo.condition != null && fieldInfo.condition.validationAnnotation().equals(Condition.class)) {
 			// condition is applied to all validations on field
-			boolean evaluation = evaluateCondition(target, fieldInfo.condition);
+			boolean evaluation = evaluateCondition(view, fieldInfo.condition);
 			if (! evaluation) {
 				// go to next field
 				return null;
@@ -313,7 +312,7 @@ public class FormValidator {
 		for (ValidationInfo valInfo : fieldInfo.validationInfoList) {
 			final Annotation annotation = valInfo.annotation;
 			if (fieldInfo.condition != null && fieldInfo.condition.validationAnnotation().equals(annotation.annotationType())) {
-				boolean evaluation = evaluateCondition(target, fieldInfo.condition);
+				boolean evaluation = evaluateCondition(view, fieldInfo.condition);
 
 				if (! evaluation) {
 					// continue to next annotation
@@ -325,7 +324,7 @@ public class FormValidator {
 				throw new NoFieldAdapterException(view, annotation);
 			}
 
-			final Object value = adapter.getFieldValue(annotation, target, view);
+			final Object value = adapter.getFieldValue(annotation, view);
 			final boolean isValid = valInfo.validator.validate(annotation, value);
 
 			if (! isValid) {
@@ -340,23 +339,13 @@ public class FormValidator {
 	}
 
 	@SuppressWarnings({"unchecked", "TryWithIdenticalCatches"})
-	private static boolean evaluateCondition(Object target, Condition conditionAnnotation) {
+	private static boolean evaluateCondition(View targetView, Condition conditionAnnotation) {
 		final int viewId = conditionAnnotation.viewId();
-		final View conditionView;
-
-		if (target instanceof Activity) {
-			conditionView = ((Activity) target).findViewById(viewId);
-		} else if (target instanceof Fragment) {
-			conditionView = ((Fragment) target).getView().findViewById(viewId);
-		} else if (target instanceof View) {
-			conditionView = ((View) target).findViewById(viewId);
-		} else {
-			throw new FormsValidationException("unknown target " + target);
-		}
+		final View conditionView = targetView.getRootView().findViewById(viewId);
 
 		final Class<? extends ICondition> clazz = conditionAnnotation.value();
 		final IFieldAdapter adapter = FieldAdapterFactory.getAdapterForField(conditionView);
-		final Object value = adapter.getFieldValue(null, target, conditionView);
+		final Object value = adapter.getFieldValue(null, conditionView);
 		try {
 			return clazz.newInstance().evaluate(value);
 		} catch (InstantiationException e) {
@@ -424,7 +413,7 @@ public class FormValidator {
 		public void onGlobalFocusChanged(View oldFocus, View newFocus) {
 			// dunno why, but oldFocus is absolutely wrong
 			if (this.currentlyFocusedView != null && this.currentlyFocusedView != newFocus) {
-                validate(this.target, this.formContainer, this.currentlyFocusedView, this.infoMap, this.callback);
+                validateSingleView(this.target, this.formContainer, this.currentlyFocusedView, this.infoMap, this.callback);
             }
 
 			this.currentlyFocusedView = newFocus;

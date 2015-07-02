@@ -101,7 +101,7 @@ public class FormsValidatorWithConditionTest {
 		model.txtNumber.setText("");
 
 		boolean result = FormValidator.validate(Robolectric.application, model, null);
-		Assert.assertTrue("validate result should have been true, but it is " + result, result);
+		Assert.assertTrue("validateSingleView result should have been true, but it is " + result, result);
 	}
 
 }

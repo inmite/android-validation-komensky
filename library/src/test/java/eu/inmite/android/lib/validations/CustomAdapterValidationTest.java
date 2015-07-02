@@ -46,7 +46,7 @@ public class CustomAdapterValidationTest {
 	public static class CustomViewAdapter implements IFieldAdapter<CustomView, String> {
 
 		@Override
-		public String getFieldValue(Annotation annotation, Object target, CustomView fieldView) {
+		public String getFieldValue(Annotation annotation, CustomView fieldView) {
 			return fieldView.getCustomText();
 		}
 	}

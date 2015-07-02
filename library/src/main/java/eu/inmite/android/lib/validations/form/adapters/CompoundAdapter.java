@@ -10,7 +10,7 @@ import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
 public class CompoundAdapter implements IFieldAdapter<CompoundButton, Boolean> {
 
     @Override
-    public Boolean getFieldValue(Annotation annotation, Object target, CompoundButton fieldView) {
+    public Boolean getFieldValue(Annotation annotation, CompoundButton fieldView) {
         return ((Checked) annotation).value() == fieldView.isChecked();
     }
 }

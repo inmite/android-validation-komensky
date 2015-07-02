@@ -11,7 +11,7 @@ import java.lang.annotation.Annotation;
 public class SpinnerAdapter implements IFieldAdapter<Spinner, Object> {
 
 	@Override
-	public Object getFieldValue(final Annotation annotation, final Object target, final Spinner fieldView) {
+	public Object getFieldValue(final Annotation annotation, final Spinner fieldView) {
 		return fieldView.getSelectedItem();
 	}
 }
