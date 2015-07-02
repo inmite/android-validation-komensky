@@ -14,22 +14,25 @@ package eu.inmite.android.lib.validations;
 import android.content.Context;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import eu.inmite.android.lib.validations.form.FormValidator;
-import eu.inmite.android.lib.validations.form.annotations.Joined;
-import eu.inmite.android.lib.validations.form.annotations.MinLength;
-import eu.inmite.android.lib.validations.form.annotations.MinValue;
-import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
-import eu.inmite.android.lib.validations.form.validators.CzechBankAccountNumberValidator;
 
-import org.junit.Assert;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
+
+import java.util.List;
+
+import eu.inmite.android.lib.validations.form.FormValidator;
+import eu.inmite.android.lib.validations.form.annotations.MinLength;
+import eu.inmite.android.lib.validations.form.annotations.MinValue;
+import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
+import eu.inmite.android.lib.validations.form.iface.IValidationCallback;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Tomas Vondracek
@@ -54,35 +57,16 @@ public class FormsValidatorTest {
 		}
 	}
 
-	private static class ModelWithJoinedUnderValidation extends LinearLayout {
-
-		@NotEmpty
-		EditText editPrefix;
-
-		@NotEmpty
-		@Joined(value = {10000, 20000}, validator = CzechBankAccountNumberValidator.class)
-		TextView txtNumber;
-
-		private ModelWithJoinedUnderValidation(Context context) {
-			super(context);
-			txtNumber = new TextView(context);
-			txtNumber.setId(10000);
-			editPrefix = new EditText(context);
-			editPrefix.setId(20000);
-
-			this.addView(txtNumber);
-			this.addView(editPrefix);
-		}
-	}
-
 	@Test
 	public void validInputShouldPass() throws Exception {
-		SimpleModelUnderValidation model = new SimpleModelUnderValidation(Robolectric.application);
+		final SimpleModelUnderValidation model = new SimpleModelUnderValidation(Robolectric.application);
 		model.txtAmount.setText("10");
 		model.editMessage.setText("0123456789");
 
-		boolean result = FormValidator.validate(Robolectric.application, model, null);
-		Assert.assertTrue(result);
+		TestValidationCallback callback = new TestValidationCallback(0, 2);
+		boolean result = FormValidator.validate(Robolectric.application, model, callback);
+		assertTrue(callback.called);
+		assertTrue(result);
 	}
 
 	@Test
@@ -92,9 +76,11 @@ public class FormsValidatorTest {
 		model.editMessage.setText("0123456789");
 
 		boolean result = FormValidator.validate(Robolectric.application, model, null);
-		Assert.assertTrue(result);
-		result = FormValidator.validate(Robolectric.application, model, null);
-		Assert.assertTrue(result);
+		assertTrue(result);
+
+		TestValidationCallback callback = new TestValidationCallback(0, 2);
+		result = FormValidator.validate(Robolectric.application, model, callback);
+		assertTrue(result);
 	}
 
 	@Test
@@ -103,8 +89,10 @@ public class FormsValidatorTest {
 		model.txtAmount.setText("");
 		model.editMessage.setText(null);
 
-		boolean result = FormValidator.validate(Robolectric.application, model, null);
-		Assert.assertFalse(result);
+		TestValidationCallback callback = new TestValidationCallback(2, 0);
+		boolean result = FormValidator.validate(Robolectric.application, model, callback);
+		assertFalse(result);
+		assertTrue(callback.called);
 	}
 
 	@Test
@@ -113,8 +101,9 @@ public class FormsValidatorTest {
 		model.txtAmount.setText("0");
 		model.editMessage.setText("0123456789");
 
-		boolean result = FormValidator.validate(Robolectric.application, model, null);
-		Assert.assertFalse(result);
+		TestValidationCallback callback = new TestValidationCallback(1, 1);
+		boolean result = FormValidator.validate(Robolectric.application, model, callback);
+		assertFalse(result);
 	}
 
 	@Test
@@ -123,30 +112,11 @@ public class FormsValidatorTest {
 		model.txtAmount.setText("2");
 		model.editMessage.setText("00");
 
-		boolean result = FormValidator.validate(Robolectric.application, model, null);
-		Assert.assertFalse(result);
+		TestValidationCallback callback = new TestValidationCallback(1, 1);
+		boolean result = FormValidator.validate(Robolectric.application, model, callback);
+		assertFalse(result);
 	}
 
-	@Test
-	public void combineValidationShouldPass() {
-		ModelWithJoinedUnderValidation model = new ModelWithJoinedUnderValidation(Robolectric.application);
-		model.txtNumber.setText("123");
-		model.editPrefix.setText("0");
-
-		boolean result = FormValidator.validate(Robolectric.application, model, null);
-		Assert.assertTrue(result);
-	}
-
-	@Test
-	public void combineValidationShouldFailOnModulo() {
-		ModelWithJoinedUnderValidation model = new ModelWithJoinedUnderValidation(Robolectric.application);
-		model.txtNumber.setText("1234");
-		model.editPrefix.setText("0");
-
-		boolean result = FormValidator.validate(Robolectric.application, model, null);
-		Assert.assertFalse(result);
-	}
-	
 	@Test
 	public void invalidValueOnInvisibleFieldShouldPass() {
 		SimpleModelUnderValidation model = new SimpleModelUnderValidation(Robolectric.application);
@@ -154,8 +124,52 @@ public class FormsValidatorTest {
 		model.editMessage.setText("0123456789");
 		
 		model.txtAmount.setVisibility(View.GONE);
-		
-		boolean result = FormValidator.validate(Robolectric.application, model, null);
-		Assert.assertTrue(result);
+
+		TestValidationCallback callback = new TestValidationCallback(0, 1);
+		boolean result = FormValidator.validate(Robolectric.application, model, callback);
+		assertTrue(result);
+	}
+
+	@Test
+	public void testTrimmedInput() {
+		final SimpleModelUnderValidation model = new SimpleModelUnderValidation(Robolectric.application);
+		model.txtAmount.setText("   ");
+		model.editMessage.setText("0123456789");
+
+		final boolean[] called = new boolean[1];
+		boolean result = FormValidator.validate(Robolectric.application, model, new IValidationCallback() {
+			@Override
+			public void validationComplete(boolean result,
+			                               List<FormValidator.ValidationFail> failedValidations,
+			                               List<View> passedValidations) {
+				called[0] = true;
+				assertEquals(1, failedValidations.size());
+				assertEquals(1, passedValidations.size());
+				assertEquals(model.txtAmount, failedValidations.get(0).view);
+			}
+		});
+		assertTrue(called[0]);
+		assertFalse(result);
+	}
+
+
+	private static class TestValidationCallback implements IValidationCallback {
+		private final int expectedSuccessCount;
+		private int expectedFailedCount;
+		boolean called;
+
+		public TestValidationCallback(int expectedFailedCount, int expectedSuccessCount) {
+			this.expectedFailedCount = expectedFailedCount;
+			this.expectedSuccessCount = expectedSuccessCount;
+		}
+
+		@Override
+		public void validationComplete(boolean result,
+		                               List<FormValidator.ValidationFail> failedValidations,
+		                               List<View> passedValidations) {
+			called = true;
+			assertEquals(expectedFailedCount, failedValidations.size());
+			assertEquals(expectedSuccessCount, passedValidations.size());
+		}
 	}
 }

@@ -26,7 +26,13 @@ public class NotEmptyValidator extends BaseValidator<CharSequence> {
 
 	@Override
 	public boolean validate(Annotation annotation, CharSequence input) {
-		return ! TextUtils.isEmpty(input);
+		final CharSequence inputToValidate;
+		if (((NotEmpty) annotation).trim()) {
+			inputToValidate = input.toString().trim();
+		} else {
+			inputToValidate = input;
+		}
+		return ! TextUtils.isEmpty(inputToValidate);
 	}
 
 	@Override

@@ -26,4 +26,5 @@ public @interface NotEmpty {
 
 	int messageId() default 0;
 	int order() default 1000;
+	boolean trim() default true;
 }
