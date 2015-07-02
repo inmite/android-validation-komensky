@@ -3,8 +3,10 @@ package eu.inmite.demo.validation;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -22,6 +24,7 @@ import java.util.GregorianCalendar;
 import eu.inmite.android.lib.dialogs.SimpleDialogFragment;
 import eu.inmite.android.lib.validations.form.FormValidator;
 import eu.inmite.android.lib.validations.form.annotations.DateInFuture;
+import eu.inmite.android.lib.validations.form.annotations.Joined;
 import eu.inmite.android.lib.validations.form.annotations.MinLength;
 import eu.inmite.android.lib.validations.form.annotations.MinValue;
 import eu.inmite.android.lib.validations.form.annotations.NotEmpty;
@@ -54,6 +57,11 @@ public class DemoActivity extends ActionBarActivity implements DatePickerDialog.
 	@NotEmpty(messageId = R.string.validation_type)
 	private Spinner mSpinner;
 
+	@Joined(value = {R.id.demo_address1, R.id.demo_address2},
+			validator = AddressValidator.class,
+			messageId = R.string.validation_address)
+	private EditText mEditAddress1;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -62,6 +70,7 @@ public class DemoActivity extends ActionBarActivity implements DatePickerDialog.
 		mEditName = (EditText) findViewById(R.id.demo_name);
 		mEditNumberOfParticipants = (EditText) findViewById(R.id.demo_participants);
 		mEditEmail = (EditText) findViewById(R.id.demo_email);
+		mEditAddress1 = (EditText) findViewById(R.id.demo_address1);
 		mTxtDate = (TextView) findViewById(R.id.demo_date);
 		mSpinner = (Spinner) findViewById(R.id.demo_spinner);
 
@@ -125,7 +134,11 @@ public class DemoActivity extends ActionBarActivity implements DatePickerDialog.
 	}
 
 	private void validate() {
+		long start = SystemClock.elapsedRealtime();
 		final boolean isValid = FormValidator.validate(this, new SimpleErrorPopupCallback(this, true));
+		long time = SystemClock.elapsedRealtime() - start;
+		Log.d(getClass().getName(), "validation finished in [ms] " + time);
+
 		if (isValid) {
 			SimpleDialogFragment.createBuilder(this, getSupportFragmentManager())
 					.setMessage(R.string.validation_success)
