@@ -23,7 +23,7 @@ dependencies {
     // Robolectric tests
     testCompile 'junit:junit:4.12'
     testCompile 'org.mockito:mockito-core:1.9.5'
-    testCompile 'com.squareup:fest-android:1.0.8'
+    testCompile 'com.squareup:fest-android:1.0.8@aar'
     testCompile('org.robolectric:robolectric:2.4') {
         exclude module: 'classworlds'
         exclude module: 'commons-logging'
