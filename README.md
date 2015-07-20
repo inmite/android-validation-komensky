@@ -91,6 +91,8 @@ private EditText mEditPotentialOfHydrogen;
 ```java
 @RegExp(value = EMAIL, messageId = R.string.validation_valid_email)
 private EditText mEditEmail;
+@RegExp(value = "^[0-9]+$", messageId = R.string.validation_valid_count)
+private EditText mEditCount;
 ```
  - [DateInFuture](../master/library/src/main/java/eu/inmite/android/lib/validations/form/annotations/DateInFuture.java)
 
