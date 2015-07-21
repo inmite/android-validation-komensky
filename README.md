@@ -13,17 +13,7 @@ Features:
 
 With Gradle:
 ```groovy
-compile 'eu.inmite.android.lib:android-validation-komensky:0.9.2'
-```
-
-With Maven:
-```xml
-<dependency>
-	<groupId>eu.inmite.android.lib</groupId>
-	<artifactId>android-validation-komensky</artifactId>
-	<version>0.9.2</version>
-	<type>jar</type>
-</dependency>
+compile 'eu.inmite.android.lib:android-validation-komensky:0.9.4@aar'
 ```
 
 Manually:
