@@ -36,7 +36,8 @@ public class ValidatorFactory {
 				WeekendDateValidator.class,
 				FutureDateValidator.class,
 				RegExpValidator.class,
-                CheckedValidator.class);
+                CheckedValidator.class,
+				EqualsValidator.class);
 	}
 
 	public static void registerValidatorClasses(Class<? extends IValidator<?>>... classes) {

@@ -1,7 +1,5 @@
 package eu.inmite.android.lib.validations.form.validators;
 
-import android.util.Log;
-
 import java.lang.annotation.Annotation;
 
 import eu.inmite.android.lib.validations.form.annotations.FieldsEqual;
@@ -18,8 +16,6 @@ public class EqualsValidator extends BaseValidator<String[]> {
         if (fieldValues == null || fieldValues.length < 2) {
             return false;
         }
-
-        Log.v("Andrew", "You got here");
 
         return false;
     }

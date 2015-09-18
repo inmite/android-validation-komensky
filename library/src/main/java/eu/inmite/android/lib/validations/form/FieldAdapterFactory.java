@@ -13,6 +13,7 @@ import eu.inmite.android.lib.validations.form.adapters.CompoundAdapter;
 import eu.inmite.android.lib.validations.form.adapters.JoinedAdapter;
 import eu.inmite.android.lib.validations.form.adapters.SpinnerAdapter;
 import eu.inmite.android.lib.validations.form.adapters.TextViewAdapter;
+import eu.inmite.android.lib.validations.form.annotations.FieldsEqual;
 import eu.inmite.android.lib.validations.form.annotations.Joined;
 import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
 
@@ -44,7 +45,7 @@ public class FieldAdapterFactory {
 
 	public static IFieldAdapter<? extends View,?> getAdapterForField(View view, Annotation annotation) {
 		final IFieldAdapter<? extends View,?> adapter;
-		if (annotation != null && Joined.class.equals(annotation.annotationType())) {
+		if (annotation != null && Joined.class.equals(annotation.annotationType()) || annotation != null && FieldsEqual.class.equals(annotation.annotationType())) {
 			if (sJoinedAdapter == null) {
 				sJoinedAdapter = new JoinedAdapter();
 			}
