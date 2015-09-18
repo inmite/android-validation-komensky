@@ -5,7 +5,6 @@ import android.view.View;
 import java.lang.annotation.Annotation;
 
 import eu.inmite.android.lib.validations.form.FieldAdapterFactory;
-import eu.inmite.android.lib.validations.form.annotations.FieldsEqual;
 import eu.inmite.android.lib.validations.form.annotations.Joined;
 import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
 
@@ -17,14 +16,7 @@ public class JoinedAdapter implements IFieldAdapter<View, String[]> {
 
 	@Override
 	public String[] getFieldValue(Annotation annotation, View fieldView) {
-		int[] viewIds = new int[0];
-		if (annotation instanceof Joined) {
-			viewIds = ((Joined) annotation).value();
-		} else if (annotation instanceof FieldsEqual) {
-			viewIds = ((FieldsEqual) annotation).fields();
-		}
-
-		final View[] views = findViewsInView(viewIds, fieldView);
+		final View[] views = getRelevantViewSet(annotation, fieldView);
 
 		final String[] fieldValues = new String[views.length];
 		for (int i = 0; i < views.length; i++) {
@@ -34,7 +26,12 @@ public class JoinedAdapter implements IFieldAdapter<View, String[]> {
 		return fieldValues;
 	}
 
-	private String valueFromView(View view) {
+	protected View[] getRelevantViewSet(Annotation annotation, View view) {
+		int[] viewIds = ((Joined) annotation).value();
+		return findViewsInView(viewIds, view);
+	}
+
+	protected String valueFromView(View view) {
 		IFieldAdapter adapter = FieldAdapterFactory.getAdapterForField(view, null);
 		if (adapter != null) {
 			return String.valueOf(adapter.getFieldValue(null, view));
@@ -42,7 +39,7 @@ public class JoinedAdapter implements IFieldAdapter<View, String[]> {
 		return null;
 	}
 
-	private static View[] findViewsInView(int[] viewIds, View target) {
+	protected static View[] findViewsInView(int[] viewIds, View target) {
 		final View container = target.getRootView();
 		final View[] views = new View[viewIds.length];
 		for (int i = 0; i < viewIds.length; i++) {

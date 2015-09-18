@@ -10,6 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.inmite.android.lib.validations.form.adapters.CompoundAdapter;
+import eu.inmite.android.lib.validations.form.adapters.FieldEqualsAdapter;
 import eu.inmite.android.lib.validations.form.adapters.JoinedAdapter;
 import eu.inmite.android.lib.validations.form.adapters.SpinnerAdapter;
 import eu.inmite.android.lib.validations.form.adapters.TextViewAdapter;
@@ -45,9 +46,14 @@ public class FieldAdapterFactory {
 
 	public static IFieldAdapter<? extends View,?> getAdapterForField(View view, Annotation annotation) {
 		final IFieldAdapter<? extends View,?> adapter;
-		if (annotation != null && Joined.class.equals(annotation.annotationType()) || annotation != null && FieldsEqual.class.equals(annotation.annotationType())) {
+		if (annotation != null && Joined.class.equals(annotation.annotationType())) {
 			if (sJoinedAdapter == null) {
 				sJoinedAdapter = new JoinedAdapter();
+			}
+			adapter = sJoinedAdapter;
+		} else if (annotation != null && FieldsEqual.class.equals(annotation.annotationType())) {
+			if (sJoinedAdapter == null) {
+				sJoinedAdapter = new FieldEqualsAdapter();
 			}
 			adapter = sJoinedAdapter;
 		} else if (sExternalAdapters != null && sExternalAdapters.containsKey(view.getClass())) {
