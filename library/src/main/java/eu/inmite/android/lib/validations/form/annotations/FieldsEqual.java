@@ -16,7 +16,7 @@ public @interface FieldsEqual {
     /**
      * Ids of all views that will need to be equal to pass validation.
      */
-    int[] value();
+    int[] fields();
     int messageId() default 0;
     int order() default 1000;
 }

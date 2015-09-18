@@ -5,6 +5,7 @@ import android.view.View;
 import java.lang.annotation.Annotation;
 
 import eu.inmite.android.lib.validations.form.FieldAdapterFactory;
+import eu.inmite.android.lib.validations.form.annotations.FieldsEqual;
 import eu.inmite.android.lib.validations.form.annotations.Joined;
 import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
 
@@ -16,7 +17,13 @@ public class JoinedAdapter implements IFieldAdapter<View, String[]> {
 
 	@Override
 	public String[] getFieldValue(Annotation annotation, View fieldView) {
-		final int[] viewIds = ((Joined) annotation).value();
+		int[] viewIds = new int[0];
+		if (annotation instanceof Joined) {
+			viewIds = ((Joined) annotation).value();
+		} else if (annotation instanceof FieldsEqual) {
+			viewIds = ((FieldsEqual) annotation).fields();
+		}
+
 		final View[] views = findViewsInView(viewIds, fieldView);
 
 		final String[] fieldValues = new String[views.length];
