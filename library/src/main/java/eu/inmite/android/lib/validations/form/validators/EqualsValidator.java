@@ -17,8 +17,10 @@ public class EqualsValidator extends BaseValidator<String[]> {
             return false;
         }
 
+        for (String field : fieldValues) {
+            if (!field.equals(fieldValues[0])) { return false; }
+        }
 
-
-        return false;
+        return true;
     }
 }
