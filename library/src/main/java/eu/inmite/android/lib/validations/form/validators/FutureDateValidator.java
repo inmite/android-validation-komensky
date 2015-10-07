@@ -43,7 +43,7 @@ public class FutureDateValidator extends BaseDateValidator {
 	@Override
 	protected boolean validateDate(final Calendar cal, final Annotation annotation) {
 		final Calendar today = Calendar.getInstance();
-		today.set(HOUR, 0);
+		today.set(HOUR_OF_DAY, 0);
 		today.set(MINUTE, 0);
 		today.set(SECOND, 0);
 		today.set(MILLISECOND, 0);
