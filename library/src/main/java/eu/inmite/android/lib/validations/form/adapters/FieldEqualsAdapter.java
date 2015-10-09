@@ -3,8 +3,6 @@ package eu.inmite.android.lib.validations.form.adapters;
 import android.view.View;
 
 import java.lang.annotation.Annotation;
-import java.util.ArrayList;
-import java.util.Arrays;
 
 import eu.inmite.android.lib.validations.form.annotations.FieldsEqual;
 
@@ -19,9 +17,10 @@ public class FieldEqualsAdapter extends JoinedAdapter {
         int[] viewIds = ((FieldsEqual) annotation).fields();
         View[] views = findViewsInView(viewIds, sourceView);
 
-        ArrayList<View> viewSet = new ArrayList<>(Arrays.asList(views));
-        viewSet.add(sourceView);
+        View[] outSet = new View[views.length + 1];
+        outSet[0] = sourceView;
+        System.arraycopy(views, 0, outSet, 1, views.length);
 
-        return viewSet.toArray(new View[viewSet.size()]);
+        return outSet;
     }
 }
