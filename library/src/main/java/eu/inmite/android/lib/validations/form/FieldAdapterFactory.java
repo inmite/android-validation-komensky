@@ -26,6 +26,7 @@ import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
 public class FieldAdapterFactory {
 
 	private static JoinedAdapter sJoinedAdapter;
+	private static FieldEqualsAdapter sFieldsEqualsAdapter;
 	private static TextViewAdapter sTextViewAdapter;
 	private static SpinnerAdapter sSpinnerViewAdapter;
 	private static CompoundAdapter sCompoundViewAdapter;
@@ -52,10 +53,10 @@ public class FieldAdapterFactory {
 			}
 			adapter = sJoinedAdapter;
 		} else if (annotation != null && FieldsEqual.class.equals(annotation.annotationType())) {
-			if (sJoinedAdapter == null) {
-				sJoinedAdapter = new FieldEqualsAdapter();
+			if (sFieldsEqualsAdapter == null) {
+				sFieldsEqualsAdapter = new FieldEqualsAdapter();
 			}
-			adapter = sJoinedAdapter;
+			adapter = sFieldsEqualsAdapter;
 		} else if (sExternalAdapters != null && sExternalAdapters.containsKey(view.getClass())) {
 			adapter = sExternalAdapters.get(view.getClass());
         } else if (view instanceof CompoundButton) {
@@ -86,5 +87,6 @@ public class FieldAdapterFactory {
 		sJoinedAdapter = null;
 		sTextViewAdapter = null;
 		sSpinnerViewAdapter = null;
+		sFieldsEqualsAdapter = null;
 	}
 }
