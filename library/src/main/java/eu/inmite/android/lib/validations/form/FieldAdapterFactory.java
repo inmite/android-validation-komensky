@@ -10,9 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import eu.inmite.android.lib.validations.form.adapters.CompoundAdapter;
+import eu.inmite.android.lib.validations.form.adapters.FieldEqualsAdapter;
 import eu.inmite.android.lib.validations.form.adapters.JoinedAdapter;
 import eu.inmite.android.lib.validations.form.adapters.SpinnerAdapter;
 import eu.inmite.android.lib.validations.form.adapters.TextViewAdapter;
+import eu.inmite.android.lib.validations.form.annotations.FieldsEqual;
 import eu.inmite.android.lib.validations.form.annotations.Joined;
 import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
 
@@ -24,6 +26,7 @@ import eu.inmite.android.lib.validations.form.iface.IFieldAdapter;
 public class FieldAdapterFactory {
 
 	private static JoinedAdapter sJoinedAdapter;
+	private static FieldEqualsAdapter sFieldsEqualsAdapter;
 	private static TextViewAdapter sTextViewAdapter;
 	private static SpinnerAdapter sSpinnerViewAdapter;
 	private static CompoundAdapter sCompoundViewAdapter;
@@ -49,6 +52,11 @@ public class FieldAdapterFactory {
 				sJoinedAdapter = new JoinedAdapter();
 			}
 			adapter = sJoinedAdapter;
+		} else if (annotation != null && FieldsEqual.class.equals(annotation.annotationType())) {
+			if (sFieldsEqualsAdapter == null) {
+				sFieldsEqualsAdapter = new FieldEqualsAdapter();
+			}
+			adapter = sFieldsEqualsAdapter;
 		} else if (sExternalAdapters != null && sExternalAdapters.containsKey(view.getClass())) {
 			adapter = sExternalAdapters.get(view.getClass());
         } else if (view instanceof CompoundButton) {
@@ -79,5 +87,6 @@ public class FieldAdapterFactory {
 		sJoinedAdapter = null;
 		sTextViewAdapter = null;
 		sSpinnerViewAdapter = null;
+		sFieldsEqualsAdapter = null;
 	}
 }
