@@ -286,7 +286,7 @@ public class FormValidator {
 	            callback.validationComplete(false, Collections.singletonList(validationFail), Collections.<View>emptyList());
             } else if (callback != null) {
                 final List<ValidationFail> noFailedValidations = Collections.emptyList();
-                overallResult = validate(formContainer.getContext(), target, null);
+                //overallResult = validate(formContainer.getContext(), target, null);
                 callback.validationComplete(overallResult, noFailedValidations, Collections.singletonList(targetView));
             }
         }
